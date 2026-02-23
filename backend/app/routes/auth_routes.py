@@ -44,11 +44,12 @@ def login():
     recruiter = Recruiter.query.filter_by(email=data["email"]).first()
 
     if not recruiter or not recruiter.check_password(data["password"]):
-        return jsonify({"error": "Invalid email or password"}), 401
+        return jsonify({"success":True,"error": "Invalid email or password"}), 401
 
 
     access_token = create_access_token(identity=recruiter.id)
     return jsonify({
+        "success":True,
         "message": "Login successful",
         "access_token":access_token,
         "recruiter": recruiter.get_recruiter()
