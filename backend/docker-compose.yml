@@ -10,19 +10,18 @@ services:
     env_file:
       - .env
     depends_on:
+      - redis
       - minio
     networks:
       - backend
 
-  # resume-parser:
-  #   build: ./resume_parser
-  #   container_name: campusforge-resume-parser
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - minio
-  #   networks:
-  #     - backend
+  redis:
+    image: redis:7
+    container_name: campusforge-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
 
   minio:
     image: minio/minio
@@ -40,7 +39,7 @@ services:
       - backend
 
 volumes:
-  minio_data:
+  minio_data:   
 
 networks:
   backend:

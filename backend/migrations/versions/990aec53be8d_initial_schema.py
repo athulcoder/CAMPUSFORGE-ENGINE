@@ -1,8 +1,8 @@
 """initial schema
 
-Revision ID: 3dfd3656964d
+Revision ID: 990aec53be8d
 Revises: 
-Create Date: 2026-02-25 19:05:04.571793
+Create Date: 2026-02-25 22:40:22.464017
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3dfd3656964d'
+revision = '990aec53be8d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -46,16 +46,22 @@ def upgrade():
     )
     op.create_table('resumes',
     sa.Column('id', sa.String(length=36), nullable=False),
-    sa.Column('recruiter_id', sa.String(), nullable=False),
-    sa.Column('candidate_id', sa.String(), nullable=False),
+    sa.Column('recruiter_id', sa.String(length=36), nullable=False),
+    sa.Column('candidate_id', sa.String(length=36), nullable=True),
+    sa.Column('bucket', sa.String(length=100), nullable=False),
+    sa.Column('object_name', sa.String(length=255), nullable=False),
     sa.Column('raw_text', sa.Text(), nullable=True),
-    sa.Column('processing_status', sa.String(length=50), nullable=True),
     sa.Column('resume_score', sa.Float(), nullable=True),
+    sa.Column('processing_status', sa.String(length=30), nullable=True),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=True),
     sa.ForeignKeyConstraint(['candidate_id'], ['candidates.id'], ),
     sa.ForeignKeyConstraint(['recruiter_id'], ['recruiters.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('id')
+    sa.PrimaryKeyConstraint('id')
     )
+    with op.batch_alter_table('resumes', schema=None) as batch_op:
+        batch_op.create_index(batch_op.f('ix_resumes_processing_status'), ['processing_status'], unique=False)
+
     op.create_table('educations',
     sa.Column('id', sa.String(length=36), nullable=False),
     sa.Column('resume_id', sa.String(length=36), nullable=True),
@@ -108,6 +114,9 @@ def downgrade():
     op.drop_table('projects')
     op.drop_table('experiences')
     op.drop_table('educations')
+    with op.batch_alter_table('resumes', schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f('ix_resumes_processing_status'))
+
     op.drop_table('resumes')
     op.drop_table('skills')
     op.drop_table('recruiters')
