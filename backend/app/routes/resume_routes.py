@@ -15,7 +15,6 @@ def upload_resume():
     file = request.files.get("file")
     recruiter_id = get_jwt_identity()
 
-    print(recruiter_id, flush=True)
     
     resume_id = str(uuid.uuid4())
     ext = file.filename.rsplit(".", 1)[1].lower()
