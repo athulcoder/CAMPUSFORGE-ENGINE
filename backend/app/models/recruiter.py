@@ -1,6 +1,8 @@
 # app/models/recruiter.py
 from app.extensions import db
-from passlib.hash import pbkdf2_sha256 as hasher
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
+ph = PasswordHasher()
 class Recruiter(db.Model):
     __tablename__ = "recruiters"
 
@@ -13,11 +15,14 @@ class Recruiter(db.Model):
 
 
     def set_password(self, passw:str):
-        self.password_hash = hasher.hash(passw);
+        self.password_hash = ph.hash(passw)
         print(self.password_hash)
 
-    def check_password(self,passw:str):
-        return hasher.verify(passw,self.password_hash);
+    def check_password(self, password: str) -> bool:
+        try:
+            return ph.verify(self.password_hash, password)
+        except VerifyMismatchError:
+            return False
     def get_recruiter(self):
         return {
             "email":self.email,

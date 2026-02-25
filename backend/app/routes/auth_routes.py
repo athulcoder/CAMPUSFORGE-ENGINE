@@ -29,8 +29,8 @@ def register():
 
 
     response = make_response(jsonify({
+        "success":True,
         "message": "Recruiter registered successfully",
-        "id": recruiter.id
     }),
 
     )
@@ -47,7 +47,7 @@ def login():
     recruiter = Recruiter.query.filter_by(email=data["email"]).first()
 
     if not recruiter or not recruiter.check_password(data["password"]):
-        return jsonify({"success":True,"error": "Invalid email or password"}), 401
+        return jsonify({"success":False,"error": "Invalid email or password"}), 401
 
 
     sessionid = create_access_token(identity=recruiter.id)
@@ -60,14 +60,14 @@ def login():
     }))
 
     response.set_cookie(
-        "sessionId",
-        sessionid,
-        httponly=True,    
-        secure=True,       
-        samesite="None",  
-        max_age=60 * 60 * 24 *7 #7 days
-    )
-    return response
+            "sessionId",
+            sessionid,
+            httponly=True,    
+            secure=True,       
+            samesite="None",  
+            max_age=60 * 60 * 24 *7 #7 days
+        )
+    return response,200
 
 
 @auth_bp.get("/me")

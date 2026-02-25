@@ -4,6 +4,6 @@ flask-migrate
 flask-jwt-extended
 psycopg2-binary
 python-dotenv
-passlib
+argon2-cffi
 gunicorn
 flask-cors

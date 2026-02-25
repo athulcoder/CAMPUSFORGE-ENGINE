@@ -1,23 +1,14 @@
 export const actionLogin = async (email, password) => {
   const res = await fetch("http://localhost:8080/api/auth/login", {
     method: "POST",
+    credentials:"include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
   });
 
   const data = await res.json();
 
-  // Handle HTTP-level errors
-  if (!res.ok) {
-    return {
-      success: false,
-      error: data.error || "Login failed",
-      status: res.status,
-    };
-  }
+  // console.log(data)
 
-  return {
-    success: true,
-    data,
-  };
+  return data
 };

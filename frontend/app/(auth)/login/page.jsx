@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { actionLogin } from "./actions";
+import { useToast } from "@/components/ToastProvider";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginPage() {
+  const router = useRouter()
+    const { showToast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -20,15 +24,19 @@ const handleLogin = async (e) => {
 
   setError("");
 
-  const res = await actionLogin(email, password);
+  const data = await actionLogin(email, password);
 
-  if (!res.success) {
-    setError(res.error || "Something went wrong");
+  if (!data.success) {
+    setError(data.error || "Something went wrong");
     return;
   }
+  else{
+    showToast(data.message)
+    router.replace('/dashboard')
+  
+    
+  }
 
-
-  console.log(res.data);
 };
 
   return (
