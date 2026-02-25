@@ -1,13 +1,17 @@
 # app/models/experience.py
 from app.extensions import db
-
+import uuid
 class Experience(db.Model):
     __tablename__ = "experiences"
 
-    id = db.Column(db.BigInteger, primary_key=True)
-    resume_id = db.Column(
-        db.BigInteger, db.ForeignKey("resumes.id"), nullable=False
+    id = db.Column(
+        db.String(36),          
+        primary_key=True,
+        default=lambda: str(uuid.uuid4()),
+        unique=True,
+        nullable=False
     )
+    resume_id = db.Column(db.String(36), db.ForeignKey("resumes.id"))
 
     job_title = db.Column(db.String(255))
     company = db.Column(db.String(255))

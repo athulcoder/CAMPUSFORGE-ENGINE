@@ -70,18 +70,18 @@ def login():
     return response,200
 
 
-@auth_bp.get("/me")
-@jwt_required()
-def me():
-    recruiter_id = get_jwt_identity()
+# @auth_bp.get("/me")
+# @jwt_required()
+# def me():
+#     recruiter_id = get_jwt_identity()
 
-    recruiter = Recruiter.query.get(recruiter_id)
-    if not recruiter:
-        return {"error": "User not found"}, 404
+#     recruiter = Recruiter.query.get(recruiter_id)
+#     if not recruiter:
+#         return {"error": "User not found"}, 404
 
-    return {
-        "recruiter": recruiter.to_dict()
-    }, 200
+#     return {
+#         "recruiter": recruiter.to_dict()
+#     }, 200
 
 
 

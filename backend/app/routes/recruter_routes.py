@@ -18,5 +18,5 @@ def get_my_profile():
         return {"error": "Recruiter not found"}, 404
 
     return {
-        "recruiter": recruiter.to_dict()
+        "recruiter": recruiter.get_recruiter()
     }, 200

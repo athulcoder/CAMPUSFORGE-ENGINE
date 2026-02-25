@@ -1,12 +1,19 @@
 # app/models/recruiter.py
 from app.extensions import db
+import uuid
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 ph = PasswordHasher()
 class Recruiter(db.Model):
     __tablename__ = "recruiters"
 
-    id = db.Column(db.BigInteger, primary_key=True)
+    id = db.Column(
+        db.String(36),          
+        primary_key=True,
+        default=lambda: str(uuid.uuid4()),
+        unique=True,
+        nullable=False
+    )
     email = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(255), nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
