@@ -11,8 +11,8 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 def register():
     data = request.get_json()
 
-    if not data or not data.get("email") or not data.get("password"):
-        return jsonify({"error": "Email and password required"}), 400
+    if not data or not data.get("email") or not data.get("password") or not data.get("name"):
+        return jsonify({"error": "All feilds are required "}), 400
 
     recruiter = Recruiter(
         email=data["email"],

@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
+import { actionRegister } from "./action";
+import { useToast } from "@/components/ToastProvider";
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -10,7 +12,9 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  const handleRegister = (e) => {
+    const { showToast } = useToast();
+  const router = useRouter();
+  const handleRegister = async(e) => {
     e.preventDefault();
 
     if (!name || !email || !password) {
@@ -19,8 +23,14 @@ export default function RegisterPage() {
     }
 
     setError("");
-    // TODO: API call
-    console.log({  });
+    const data = await actionRegister(email,name,password)
+    if(!data.success){
+      setError(data.error ||"Something went wrong")
+    }
+    else {
+      showToast(data.message||"Account created now login")
+      router.replace("/login")
+    }
   };
 
   return (
