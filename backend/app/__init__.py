@@ -33,4 +33,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     from app.routes.recruter_routes import recruiter_bp
     app.register_blueprint(recruiter_bp)
+
+    from app.routes.resume_routes import resume_bp
+    app.register_blueprint(resume_bp)
     return app

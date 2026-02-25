@@ -5,6 +5,15 @@ from datetime import timedelta
 
 load_dotenv()
 class Config:
+
+    MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # 10MB
+
+    MINIO_ENDPOINT = "minio:9000"
+    MINIO_ACCESS_KEY = "minioadmin"
+    MINIO_SECRET_KEY = "minioadmin123"
+    MINIO_SECURE = False
+    RESUME_BUCKET = "resumes"
+
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SECRET_KEY = os.getenv("FLASK_SECRET_KEY")
     JWT_TOKEN_LOCATION = ["cookies"]

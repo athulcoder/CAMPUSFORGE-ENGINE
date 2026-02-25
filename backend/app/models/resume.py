@@ -20,7 +20,7 @@ class Resume(db.Model):
     )
 
     raw_text = db.Column(db.Text)
-    processing_status = db.Column(db.String(50), default="PENDING")
+    processing_status = db.Column(db.String(50), default="ADD TO REDIS QUEUE")
     resume_score = db.Column(db.Float)
 
     skills = db.relationship(

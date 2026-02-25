@@ -7,3 +7,5 @@ python-dotenv
 argon2-cffi
 gunicorn
 flask-cors
+minio
+redis
