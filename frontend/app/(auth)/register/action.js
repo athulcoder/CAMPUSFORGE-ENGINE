@@ -8,7 +8,7 @@ export const actionRegister = async (email,name, password) => {
 
   const data = await res.json();
 
-  // console.log(data)
+
 
   return data
 };
