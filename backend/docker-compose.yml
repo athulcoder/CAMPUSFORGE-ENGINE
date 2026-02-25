@@ -1,9 +1,8 @@
-version: "3.9"
 
 services:
   backend:
     build: .
-    container_name: campusforge-backend
+    container_name: campusforge-backend 
     command: gunicorn -b 0.0.0.0:5000 run:app
     ports:
       - "8080:5000"

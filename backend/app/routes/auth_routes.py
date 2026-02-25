@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify,make_response
 from sqlalchemy.exc import IntegrityError
 from app.extensions import db
 from app.models.recruiter import Recruiter
@@ -28,10 +28,13 @@ def register():
         return jsonify({"error": "Email already exists"}), 400
 
 
-    return jsonify({
+    response = make_response(jsonify({
         "message": "Recruiter registered successfully",
         "id": recruiter.id
-    }), 201
+    }),
+
+    )
+    return  response
 
 
 @auth_bp.post("/login")
@@ -47,13 +50,24 @@ def login():
         return jsonify({"success":True,"error": "Invalid email or password"}), 401
 
 
-    access_token = create_access_token(identity=recruiter.id)
-    return jsonify({
+    sessionid = create_access_token(identity=recruiter.id)
+
+    response = make_response(
+        jsonify({
         "success":True,
         "message": "Login successful",
-        "access_token":access_token,
         "recruiter": recruiter.get_recruiter()
-    }), 200
+    }))
+
+    response.set_cookie(
+        "sessionId",
+        sessionid,
+        httponly=True,    
+        secure=True,       
+        samesite="None",  
+        max_age=60 * 60 * 24 *7 #7 days
+    )
+    return response
 
 
 @auth_bp.get("/me")
