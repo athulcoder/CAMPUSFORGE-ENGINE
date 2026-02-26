@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from db.session import SessionLocal
-from models.recruiter import Recruiter
+from backend.db.session import SessionLocal
+from backend.models.recruiter import Recruiter
 
 recruiter_bp = Blueprint(
     "recruiter",

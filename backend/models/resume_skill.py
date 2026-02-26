@@ -1,7 +1,7 @@
 # models/resume_skill.py
 from sqlalchemy import Column , String,ForeignKey
 from sqlalchemy.orm import relationship
-from db.base import Base
+from backend.db.base import Base
 import uuid
 class ResumeSkill(Base):
     __tablename__ = "resume_skills"

@@ -2,7 +2,9 @@ version: "3.9"
 
 services:
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: campusforge-backend
     ports:
       - "8080:5000"

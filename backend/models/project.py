@@ -1,7 +1,7 @@
 # models/project.py
 from sqlalchemy import Column , String, ForeignKey,Text
 from sqlalchemy.orm import relationship
-from db.base import Base
+from backend.db.base import Base
 import uuid
 class Project(Base):
     __tablename__ = "projects"

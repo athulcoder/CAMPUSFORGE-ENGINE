@@ -1,7 +1,7 @@
 # models/experience.py
 from sqlalchemy import Column , String, ForeignKey,Text,Date
 from sqlalchemy.orm import relationship
-from db.base import Base
+from backend.db.base import Base
 import uuid
 class Experience(Base):
     __tablename__ = "experiences"

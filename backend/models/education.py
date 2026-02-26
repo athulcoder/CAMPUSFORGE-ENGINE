@@ -1,7 +1,7 @@
 # models/education.py
 from sqlalchemy import Column , String, ForeignKey,Float,Integer
 from sqlalchemy.orm import relationship
-from db.base import Base
+from backend.db.base import Base
 import uuid
 class Education(Base):
     __tablename__ = "educations"

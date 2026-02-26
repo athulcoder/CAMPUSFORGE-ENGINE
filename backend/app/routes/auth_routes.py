@@ -2,8 +2,8 @@ from flask import Blueprint, request, jsonify, make_response
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
-from db.session import SessionLocal
-from models.recruiter import Recruiter
+from backend.db.session import SessionLocal
+from backend.models.recruiter import Recruiter
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 

@@ -1,7 +1,7 @@
 # app/models/recruiter.py
 from sqlalchemy import Column , String
 from sqlalchemy.orm import relationship
-from db.base import Base
+from backend.db.base import Base
 import uuid
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError

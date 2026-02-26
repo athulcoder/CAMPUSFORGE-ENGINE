@@ -10,7 +10,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from db.base import Base
+from backend.db.base import Base
 import uuid
 class Skill(Base):
     __tablename__ = "skills"

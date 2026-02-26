@@ -3,11 +3,12 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 import uuid
 
-from db.session import SessionLocal
-from models.resume import Resume, UploadStatus, ProcessingStatus
-from backend.services.minio_service import upload_to_minio
+from backend.db.session import SessionLocal
+from backend.models.resume import Resume, UploadStatus, ProcessingStatus
+from backend.services.minio_service import upload_resume
 from backend.services.redis_service import enqueue_resume_job
-from app.utils.file_validation import validate_file
+
+from backend.app.utils.file_validation import validate_file
 
 resume_bp = Blueprint(
     "resume",
@@ -33,7 +34,7 @@ def upload_resume():
     file_bytes = file.read()
 
     # 1️⃣ Upload to MinIO
-    upload_to_minio(
+    upload_resume(
         object_name=object_name,
         data=file_bytes,
         content_type=file.mimetype

@@ -19,12 +19,12 @@ def create_app():
     jwt.init_app(app)
 
     # ✅ IMPORTANT: import models ONCE to register metadata
-    import models  
+    import backend.models  
 
     # Register blueprints
-    from app.routes.auth_routes import auth_bp
-    from app.routes.recruter_routes import recruiter_bp
-    from app.routes.resume_routes import resume_bp
+    from backend.app.routes.auth_routes import auth_bp
+    from backend.app.routes.recruter_routes import recruiter_bp
+    from backend.app.routes.resume_routes import resume_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(recruiter_bp)
