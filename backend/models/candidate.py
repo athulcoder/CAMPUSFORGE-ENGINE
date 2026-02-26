@@ -6,7 +6,7 @@ from backend.db.base import Base
 import uuid
 class Candidate(Base):
     __tablename__ = "candidates"
-
+    
     id = Column(
         String(36),          
         primary_key=True,

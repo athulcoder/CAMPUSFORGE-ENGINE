@@ -4,7 +4,7 @@ from backend.services.redis_service import dequeue_resume_job
 from backend.services.minio_service import download_from_minio
 from backend.db.session import SessionLocal
 from backend.models.resume import Resume, ProcessingStatus
-
+from backend.resume_worker.extractions.extract_all import extract_all_and_save_to_db
 from backend.resume_worker.parsers.pdf_extractor import  parse_pdf
 from backend.resume_worker.scoring.resume_scoring import score_resume
 
@@ -42,12 +42,17 @@ while True:
             # 5️⃣ Parse PDF
             raw_text = parse_pdf(pdf_bytes)
 
-            # 6️⃣ Score resume
-            score = score_resume(raw_text)
+            # TODO: CREATE EACH TABLE
 
-            # 7️⃣ Save results
+            extract_all_and_save_to_db(raw_text,resume_id)
+
+
+            # 6️⃣ Score resume
+            score_data = score_resume(raw_text)
+
             resume.raw_text = raw_text
-            resume.resume_score = score
+            resume.resume_score = score_data["score"]
+            resume.matched_role = score_data.get("matched_role")
             resume.processing_status = ProcessingStatus.COMPLETED
 
             db.commit()
