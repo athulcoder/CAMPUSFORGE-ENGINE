@@ -9,3 +9,9 @@ gunicorn
 flask-cors
 minio
 redis
+pymupdf
+redis
+sqlalchemy
+psycopg2-binary
+minio
+python-dotenv

@@ -19,7 +19,9 @@ services:
       - campusforge
 
   resume-worker:
-    build: ./resume_worker
+    build:
+      context: .
+      dockerfile: backend/Dockerfile   # ✅ SAME IMAGE AS BACKEND
     container_name: campusforge-resume-worker
     env_file:
       - .env
@@ -28,6 +30,8 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
+    command: python -m backend.resume_worker.worker
+    restart: always
     networks:
       - campusforge
 
