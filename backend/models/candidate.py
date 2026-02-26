@@ -1,12 +1,12 @@
 # models/candidate.py
 
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String,ForeignKey
 from sqlalchemy.orm import relationship
 from backend.db.base import Base
 import uuid
 class Candidate(Base):
     __tablename__ = "candidates"
-    
+
     id = Column(
         String(36),          
         primary_key=True,
@@ -18,5 +18,5 @@ class Candidate(Base):
     full_name = Column(String(255), nullable=False)
     phone = Column(String(20))
     location = Column(String(255))
-
+    resume_id = Column(String(36), ForeignKey("resumes.id"))
     resumes = relationship("Resume", back_populates="candidate")
