@@ -1,16 +1,10 @@
 import fitz
 
-
-def extract_text_from_pdf(path: str) -> str:
-    """
-    Extracts clean text from a PDF using PyMuPDF.
-    """
+def parse_pdf(pdf_bytes: bytes) -> str:
     text_parts = []
-
-    with fitz.open(path) as doc:
+    with fitz.open(stream=pdf_bytes, filetype="pdf") as doc:
         for page in doc:
-            text = page.get_text("text")
-            if text:
-                text_parts.append(text)
-
-    return "\n".join(text_parts).strip()
+            t = page.get_text("text")
+            if t:
+                text_parts.append(t)
+    return "\n".join(text_parts)

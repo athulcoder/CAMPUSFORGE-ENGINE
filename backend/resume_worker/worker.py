@@ -5,7 +5,7 @@ from backend.services.minio_service import download_from_minio
 from backend.db.session import SessionLocal
 from backend.models.resume import Resume, ProcessingStatus
 
-from backend.resume_worker.parsers.pdf_extractor import extract_text_from_pdf as parse_pdf
+from backend.resume_worker.parsers.pdf_extractor import  parse_pdf
 from backend.resume_worker.scoring.resume_scoring import score_resume
 
 print("🚀 Resume worker started")
