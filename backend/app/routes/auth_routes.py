@@ -1,9 +1,10 @@
-from flask import Blueprint, request, jsonify,make_response
+from flask import Blueprint, request, jsonify, make_response
 from sqlalchemy.exc import IntegrityError
-from app.extensions import db
-from app.models.recruiter import Recruiter
-from flask_jwt_extended import create_access_token
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+
+from db.session import SessionLocal
+from models.recruiter import Recruiter
+
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 
@@ -12,29 +13,29 @@ def register():
     data = request.get_json()
 
     if not data or not data.get("email") or not data.get("password") or not data.get("name"):
-        return jsonify({"error": "All feilds are required "}), 400
+        return jsonify({"error": "All fields are required"}), 400
+
+    db = SessionLocal()
 
     recruiter = Recruiter(
         email=data["email"],
-        name=data.get("name", "")
+        name=data["name"]
     )
     recruiter.set_password(data["password"])
 
     try:
-        db.session.add(recruiter)
-        db.session.commit()
+        db.add(recruiter)
+        db.commit()
     except IntegrityError:
-        db.session.rollback()
+        db.rollback()
         return jsonify({"error": "Email already exists"}), 400
+    finally:
+        db.close()
 
-
-    response = make_response(jsonify({
-        "success":True,
-        "message": "Recruiter registered successfully",
-    }),
-
-    )
-    return  response
+    return jsonify({
+        "success": True,
+        "message": "Recruiter registered successfully"
+    }), 201
 
 
 @auth_bp.post("/login")
@@ -44,44 +45,49 @@ def login():
     if not data or not data.get("email") or not data.get("password"):
         return jsonify({"error": "Email and password required"}), 400
 
-    recruiter = Recruiter.query.filter_by(email=data["email"]).first()
+    db = SessionLocal()
+
+    recruiter = db.query(Recruiter)\
+        .filter(Recruiter.email == data["email"])\
+        .first()
 
     if not recruiter or not recruiter.check_password(data["password"]):
-        return jsonify({"success":False,"error": "Invalid email or password"}), 401
+        db.close()
+        return jsonify({"success": False, "error": "Invalid email or password"}), 401
 
+    access_token = create_access_token(identity=recruiter.id)
 
-    sessionid = create_access_token(identity=recruiter.id)
-
-    response = make_response(
-        jsonify({
-        "success":True,
+    response = make_response(jsonify({
+        "success": True,
         "message": "Login successful",
         "recruiter": recruiter.get_recruiter()
     }))
 
     response.set_cookie(
-            "sessionId",
-            sessionid,
-            httponly=True,    
-            secure=True,       
-            samesite="None",  
-            max_age=60 * 60 * 24 *7 #7 days
-        )
-    return response,200
+        "sessionId",
+        access_token,
+        httponly=True,
+        secure=True,       # must be True in prod
+        samesite="None",
+        max_age=60 * 60 * 24 * 7
+    )
+
+    db.close()
+    return response, 200
 
 
-# @auth_bp.get("/me")
-# @jwt_required()
-# def me():
-#     recruiter_id = get_jwt_identity()
+@auth_bp.get("/me")
+@jwt_required()
+def me():
+    recruiter_id = get_jwt_identity()
 
-#     recruiter = Recruiter.query.get(recruiter_id)
-#     if not recruiter:
-#         return {"error": "User not found"}, 404
+    db = SessionLocal()
+    recruiter = db.query(Recruiter).filter(Recruiter.id == recruiter_id).first()
+    db.close()
 
-#     return {
-#         "recruiter": recruiter.to_dict()
-#     }, 200
+    if not recruiter:
+        return jsonify({"error": "User not found"}), 404
 
-
-
+    return jsonify({
+        "recruiter": recruiter.get_recruiter()
+    }), 200

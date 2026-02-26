@@ -104,3 +104,14 @@ class Resume(Base):
         server_default=func.now(),
         onupdate=func.now()
     )
+    recruiter = relationship(
+        "Recruiter",
+        back_populates="resumes"
+    )
+
+    candidate = relationship(
+        "Candidate",
+        back_populates="resumes",
+        lazy="select"
+    )
+

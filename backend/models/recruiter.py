@@ -20,7 +20,7 @@ class Recruiter(Base):
     name = Column(String(255), nullable=False)
     password_hash = Column(String(255), nullable=False)
 
-    resumes = relationship("Resume", back_populates="recruiters")
+    resumes = relationship("Resume", back_populates="recruiter")
 
 
     def set_password(self, passw:str):

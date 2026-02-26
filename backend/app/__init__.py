@@ -1,40 +1,33 @@
 from flask import Flask
 from .config import Config
-from db.base import Base, engine
-from .extensions import migrate,jwt
+from .extensions import jwt
 from flask_cors import CORS
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
     CORS(
         app,
         supports_credentials=True,
         origins=[
             "http://localhost:3000",
-            "http://127.0.0.1:3000"
+            "http://127.0.0.1:3000",
         ],
     )
-    
-    
-    migrate.init_app(Base, engine)  
+
     jwt.init_app(app)
-    from .models import (
-        Recruiter,
-        Candidate,
-        Resume,
-        Skill,
-        ResumeSkill,
-        Education,
-        Experience,
-        Project
-    )
 
-  
+    # ✅ IMPORTANT: import models ONCE to register metadata
+    import models  
+
+    # Register blueprints
     from app.routes.auth_routes import auth_bp
-    app.register_blueprint(auth_bp)
     from app.routes.recruter_routes import recruiter_bp
-    app.register_blueprint(recruiter_bp)
-
     from app.routes.resume_routes import resume_bp
+
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(recruiter_bp)
     app.register_blueprint(resume_bp)
+
     return app

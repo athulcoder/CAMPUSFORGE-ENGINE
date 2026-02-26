@@ -1,20 +1,31 @@
 # app/models/skill.py
-from app.extensions import db
+from sqlalchemy import (
+    Column,
+    String,
+    ForeignKey,
+    Enum,
+    Text,
+    DateTime,
+    Float
+)
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from db.base import Base
 import uuid
-class Skill(db.Model):
+class Skill(Base):
     __tablename__ = "skills"
 
-    id = db.Column(
-        db.String(36),          
+    id = Column(
+        String(36),          
         primary_key=True,
         default=lambda: str(uuid.uuid4()),
         unique=True,
         nullable=False
     )
-    skill_name = db.Column(db.String(255), unique=True, nullable=False)
-    category = db.Column(db.String(100))
+    skill_name = Column(String(255), unique=True, nullable=False)
+    category = Column(String(100))
 
-    resumes = db.relationship(
+    resumes = relationship(
         "Resume",
         secondary="resume_skills",
         back_populates="skills"

@@ -1,48 +1,44 @@
-from redis_client import redis_client
-from db import SessionLocal
-from models import Resume
-from parser import parse_resume
-
+from backend.services.redis_service import redis_client
+from backend.db.session import SessionLocal
+from backend.models.resume import Resume, ProcessingStatus
+from parser.pdf_parser import parse_pdf_text
+from backend.services.minio_service import download_from_minio
 import json
 import time
-print("🚀 PDF resume worker started", flush=True)
 
-QUEUE_NAME = "resume_jobs"
+print("🚀 Resume worker started")
 
 while True:
     try:
-        job = redis_client.brpop(QUEUE_NAME, timeout=5)
-        if not job:
-            continue
-
-        _, payload = job
-        data = json.loads(payload)
+        _, job = redis_client.brpop("resume_jobs")
+        data = json.loads(job)
 
         db = SessionLocal()
-        resume = db.get(Resume, data["resume_id"])
 
+        resume = db.query(Resume).get(data["resume_id"])
         if not resume:
-            print("❌ Resume not found:", data["resume_id"], flush=True)
             db.close()
             continue
 
-        resume.processing_status = "PARSING"
+        resume.processing_status = ProcessingStatus.PARSING
         db.commit()
 
-        raw_text, score = parse_resume(data)
+        pdf_bytes = download_from_minio(
+            data["bucket"],
+            data["object_name"]
+        )
 
-        resume.processing_status = "CALCULATING_SCORE"
+        raw_text, score = parse_pdf_text(pdf_bytes)
+
         resume.raw_text = raw_text
         resume.resume_score = score
-        db.commit()
+        resume.processing_status = ProcessingStatus.COMPLETED
 
-        resume.processing_status = "COMPLETED"
         db.commit()
-
         db.close()
 
-        print(f"✅ Resume {resume.id} parsed", flush=True)
+        print(f"✅ Resume {resume.id} parsed")
 
     except Exception as e:
-        print("🔥 Worker error:", e, flush=True)
+        print("🔥 Worker error:", e)
         time.sleep(2)

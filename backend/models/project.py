@@ -1,5 +1,5 @@
 # models/project.py
-from sqlalchemy import Column , String, ForeignKey,Float,Integer
+from sqlalchemy import Column , String, ForeignKey,Text
 from sqlalchemy.orm import relationship
 from db.base import Base
 import uuid
