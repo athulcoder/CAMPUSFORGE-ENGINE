@@ -2,7 +2,7 @@ from backend.db.session import SessionLocal
 from backend.models.candidate import Candidate
 
 
-def saveCandidateToDB(data: dict, resume_id):
+def saveCandidateToDB(data: dict, resume_id:str):
     db = SessionLocal()
 
     try:
@@ -11,6 +11,7 @@ def saveCandidateToDB(data: dict, resume_id):
             email=data.get("email"),
             phone=data.get("phone"),
             location=data.get("location"),
+            resume_id=resume_id
         )
 
         db.add(candidate)

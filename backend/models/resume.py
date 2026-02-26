@@ -44,12 +44,7 @@ class Resume(Base):
         nullable=False
     )
 
-    candidate_id = Column(
-        String(36),
-        ForeignKey("candidates.id", ondelete="SET NULL"),
-        nullable=True
-    )
-
+    
     bucket = Column(String(100), nullable=False)
     object_name = Column(String(255), nullable=False)
 
@@ -111,7 +106,8 @@ class Resume(Base):
 
     candidate = relationship(
         "Candidate",
-        back_populates="resumes",
-        lazy="select"
+        back_populates="resume",
+        uselist=False,
+        cascade="all, delete-orphan"
     )
 
