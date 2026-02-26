@@ -2,9 +2,8 @@ version: "3.9"
 
 services:
   backend:
-    build: .
+    build: ./backend
     container_name: campusforge-backend
-    command: gunicorn -b 0.0.0.0:5000 run:app
     ports:
       - "8080:5000"
     env_file:
@@ -13,7 +12,18 @@ services:
       - redis
       - minio
     networks:
-      - backend
+      - campusforge
+
+  resume-worker:
+    build: ./resume_worker
+    container_name: campusforge-resume-worker
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - minio
+    networks:
+      - campusforge
 
   redis:
     image: redis:7
@@ -21,7 +31,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - backend
+      - campusforge
 
   minio:
     image: minio/minio
@@ -36,11 +46,11 @@ services:
     volumes:
       - minio_data:/data
     networks:
-      - backend
+      - campusforge
 
 volumes:
-  minio_data:   
+  minio_data:
 
 networks:
-  backend:
+  campusforge:
     driver: bridge

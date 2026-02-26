@@ -1,6 +1,7 @@
 from flask import Flask
 from .config import Config
-from .extensions import db, migrate,jwt
+from db.base import Base, engine
+from .extensions import migrate,jwt
 from flask_cors import CORS
 def create_app():
     app = Flask(__name__)
@@ -14,8 +15,8 @@ def create_app():
         ],
     )
     
-    db.init_app(app)
-    migrate.init_app(app, db)  
+    
+    migrate.init_app(Base, engine)  
     jwt.init_app(app)
     from .models import (
         Recruiter,

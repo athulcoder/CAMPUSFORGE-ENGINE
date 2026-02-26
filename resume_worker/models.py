@@ -1,6 +1,22 @@
-# app/models/resume.py
 from app.extensions import db
 import uuid
+import enum
+
+
+class UploadStatus(enum.Enum):
+    UPLOADING = "UPLOADING"
+    UPLOADED = "UPLOADED"
+
+
+class ProcessingStatus(enum.Enum):
+    QUEUED = "QUEUED"
+    PARSING = "PARSING"
+    CALCULATING_SCORE = "CALCULATING_SCORE"
+    MATCHING_JOB_ROLE = "MATCHING_JOB_ROLE"
+    FINALISING = "FINALISING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+
 
 class Resume(db.Model):
     __tablename__ = "resumes"
@@ -23,22 +39,25 @@ class Resume(db.Model):
         nullable=True
     )
 
-    # MinIO reference
     bucket = db.Column(db.String(100), nullable=False)
     object_name = db.Column(db.String(255), nullable=False)
 
-    # Parser output
-    raw_text = db.Column(db.Text, nullable=True)
-    resume_score = db.Column(db.Float, nullable=True)
+    upload_status = db.Column(
+        db.Enum(UploadStatus, name="upload_status_enum"),
+        nullable=False,
+        default=UploadStatus.UPLOADING
+    )
 
-    # Pipeline state
     processing_status = db.Column(
-        db.String(30),
-        default="UPLOADING",
+        db.Enum(ProcessingStatus, name="processing_status_enum"),
+        nullable=True,
+        default=ProcessingStatus.QUEUED,
         index=True
     )
 
-    # Relationships
+    raw_text = db.Column(db.Text, nullable=True)
+    resume_score = db.Column(db.Float, nullable=True)
+
     skills = db.relationship(
         "Skill",
         secondary="resume_skills",
@@ -49,7 +68,6 @@ class Resume(db.Model):
     experiences = db.relationship("Experience", cascade="all, delete")
     projects = db.relationship("Project", cascade="all, delete")
 
-    # Audit
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(
         db.DateTime,

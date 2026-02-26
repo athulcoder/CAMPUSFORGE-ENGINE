@@ -39,9 +39,4 @@ USER appuser
 # -----------------------------
 EXPOSE 5000
 
-CMD ["gunicorn", \
-     "--bind", "0.0.0.0:5000", \
-     "--workers", "3", \
-     "--threads", "2", \
-     "--timeout", "120", \
-     "run:app"]
+CMD ["gunicorn","--bind","0.0.0.0:5000","--workers","4","--threads","4","--worker-class","gthread","--timeout","30","--graceful-timeout","10","--keep-alive","5","run:app"]

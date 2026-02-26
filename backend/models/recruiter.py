@@ -1,24 +1,26 @@
 # app/models/recruiter.py
-from app.extensions import db
+from sqlalchemy import Column , String
+from sqlalchemy.orm import relationship
+from db.base import Base
 import uuid
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 ph = PasswordHasher()
-class Recruiter(db.Model):
+class Recruiter(Base):
     __tablename__ = "recruiters"
 
-    id = db.Column(
-        db.String(36),          
+    id = Column(
+        String(36),          
         primary_key=True,
         default=lambda: str(uuid.uuid4()),
         unique=True,
         nullable=False
     )
-    email = db.Column(db.String(255), unique=True, nullable=False)
-    name = db.Column(db.String(255), nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
+    email = Column(String(255), unique=True, nullable=False)
+    name = Column(String(255), nullable=False)
+    password_hash = Column(String(255), nullable=False)
 
-    resumes = db.relationship("Resume", backref="recruiter", lazy=True)
+    resumes = relationship("Resume", back_populates="recruiters")
 
 
     def set_password(self, passw:str):

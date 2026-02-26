@@ -1,0 +1,6 @@
+pymupdf
+redis
+sqlalchemy
+psycopg2-binary
+minio
+python-dotenv

@@ -26,7 +26,7 @@ def upload_resume():
 
     resume = Resume(
         id=resume_id,
-        processing_status="PENDING",
+        upload_status="UPLOADED",
         bucket="resumes",
         object_name=object_name,
         recruiter_id=recruiter_id
