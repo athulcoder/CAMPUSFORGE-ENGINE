@@ -5,7 +5,7 @@ import uuid
 
 from backend.db.session import SessionLocal
 from backend.models.resume import Resume, UploadStatus, ProcessingStatus
-from backend.services.minio_service import upload_resume
+from backend.services.minio_service import upload_resume_minio
 from backend.services.redis_service import enqueue_resume_job
 
 from backend.app.utils.file_validation import validate_file
@@ -34,7 +34,7 @@ def upload_resume():
     file_bytes = file.read()
 
     # 1️⃣ Upload to MinIO
-    upload_resume(
+    upload_resume_minio(
         object_name=object_name,
         data=file_bytes,
         content_type=file.mimetype

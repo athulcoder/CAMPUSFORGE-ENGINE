@@ -22,7 +22,7 @@ def ensure_bucket(bucket: str = RESUME_BUCKET):
         minio_client.make_bucket(bucket)
 
 
-def upload_resume(object_name: str, data: bytes, content_type: str):
+def upload_resume_minio(object_name: str, data: bytes, content_type: str):
     ensure_bucket()
     minio_client.put_object(
         RESUME_BUCKET,
@@ -32,7 +32,12 @@ def upload_resume(object_name: str, data: bytes, content_type: str):
         content_type=content_type,
     )
 
-
-def download_resume(bucket: str, object_name: str) -> bytes:
-    response = minio_client.get_object(bucket, object_name)
-    return response.read()
+def download_from_minio(bucket: str, object_name: str) -> bytes:
+    response = None
+    try:
+        response = minio_client.get_object(bucket, object_name)
+        return response.read()
+    finally:
+        if response:
+            response.close()
+            response.release_conn()

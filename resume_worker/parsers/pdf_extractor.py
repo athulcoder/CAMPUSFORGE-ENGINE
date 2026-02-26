@@ -1,10 +1,9 @@
-import fitz  
+import fitz
 
 
 def extract_text_from_pdf(path: str) -> str:
     """
     Extracts clean text from a PDF using PyMuPDF.
-    Fast and reliable for resumes.
     """
     text_parts = []
 
@@ -14,4 +13,4 @@ def extract_text_from_pdf(path: str) -> str:
             if text:
                 text_parts.append(text)
 
-    return "\n".join(text_parts)
+    return "\n".join(text_parts).strip()

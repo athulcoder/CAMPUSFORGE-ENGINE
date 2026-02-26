@@ -1,15 +1,14 @@
 import tempfile
 import os
 
-from pdf_extractor import extract_text_from_pdf
-from minio_client import download_file
-
+from resume_worker.parsers.pdf_extractor import extract_text_from_pdf
+from backend.services.minio_service import download_resume
 
 def parse_resume(job_data):
     with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmp:
         local_path = tmp.name
 
-    download_file(
+    download_resume(
         bucket=job_data["bucket"],
         object_name=job_data["object_name"],
         dest=local_path
