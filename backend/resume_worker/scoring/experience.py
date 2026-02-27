@@ -1,16 +1,20 @@
-import re
+def score_experience(
+    candidate_years: float,
+    job_min_years: float
+) -> float:
+    """
+    Scores experience based on how well candidate meets job requirement.
+    Returns score in range 0–30.
+    """
 
-def extract_years(text: str) -> float:
-    matches = re.findall(r"(\d+)\+?\s+years?", text.lower())
-    return max(map(int, matches), default=0)
+    MAX_EXP_SCORE = 30.0
 
-def score_experience(text: str) -> float:
-    years = extract_years(text)
+    if candidate_years <= 0:
+        return 0.0
 
-    if years >= 5:
-        return 30
-    if years >= 3:
-        return 22
-    if years >= 1:
-        return 15
-    return 5
+    if candidate_years >= job_min_years:
+        return MAX_EXP_SCORE
+
+    # Partial score if below requirement
+    ratio = candidate_years / job_min_years
+    return round(ratio * MAX_EXP_SCORE, 2)

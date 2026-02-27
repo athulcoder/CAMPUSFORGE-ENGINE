@@ -17,7 +17,7 @@ def cache_candidate_basic(candidate):
     )
 
     # index by role
-    r.sadd(f"candidate:role:{candidate['role']}", cid)
+    r.sadd(f"candidate:role:{candidate['job_role']}", cid)
 
 
 def get_candidates_by_role(role):

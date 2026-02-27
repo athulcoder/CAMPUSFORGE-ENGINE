@@ -63,7 +63,7 @@ class Resume(Base):
 
     raw_text = Column(Text)
     resume_score = Column(Float)
-
+    maching_role = Column(String, nullable=True)
     skills = relationship(
         "Skill",
         secondary="resume_skills",
@@ -99,10 +99,12 @@ class Resume(Base):
         server_default=func.now(),
         onupdate=func.now()
     )
+
     recruiter = relationship(
         "Recruiter",
         back_populates="resumes"
     )
+
 
     candidate = relationship(
         "Candidate",

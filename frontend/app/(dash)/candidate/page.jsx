@@ -79,7 +79,7 @@ export default function CandidatesPage() {
     fetchCandidates();
   }, [selectedRole]);
 
-  const filteredRoles = JOB_ROLES.filter((role) =>
+  const filteredRoles = JOB_ROLE.filter((role) =>
     role.toLowerCase().includes(search.toLowerCase())
   );
 

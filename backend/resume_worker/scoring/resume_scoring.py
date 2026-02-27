@@ -1,26 +1,59 @@
+from backend.resume_worker.jobs.job_roles import JOB_ROLES
 from .skills import score_skills
 from .experience import score_experience
 from .education import score_education
 from .semantic import score_semantic
 
-def score_resume(text: str, job_role: str = "backend_developer") -> dict:
-    skill_score = score_skills(text, job_role)
-    exp_score = score_experience(text)
-    edu_score = score_education(text)
-    semantic_score = score_semantic(text, job_role)
 
-    total = round(
-        skill_score + exp_score + edu_score + semantic_score,
-        2
-    )
+def score_resume(parsed_resume: dict) -> dict:
+    """
+    Scores resume against all predefined job roles
+    and returns the best match
+    """
+
+    results = []
+
+    for job in JOB_ROLES:
+        skill_score = score_skills(
+            parsed_resume["skills"],
+            job["skills"]
+        )
+
+        exp_score = score_experience(
+            parsed_resume["total_experience_years"],
+            job["min_experience_years"]
+        )
+
+        edu_score = score_education(
+            parsed_resume.get("education_level"),
+            job["education_keywords"]
+        )
+
+        semantic_score = score_semantic(
+            parsed_resume["raw_text"],
+            job["description"]
+        )
+
+        total = round(
+            skill_score + exp_score + edu_score + semantic_score,
+            2
+        )
+
+        results.append({
+            "job_role": job["role"],
+            "score": min(total, 100),
+            "breakdown": {
+                "skills": round(skill_score, 2),
+                "experience": round(exp_score, 2),
+                "education": round(edu_score, 2),
+                "semantic": round(semantic_score, 2),
+            }
+        })
+
+    # 🔥 Best match first
+    results.sort(key=lambda x: x["score"], reverse=True)
 
     return {
-        "score": min(total, 100),
-        "breakdown": {
-            "skills": round(skill_score, 2),
-            "experience": round(exp_score, 2),
-            "education": round(edu_score, 2),
-            "semantic": round(semantic_score, 2),
-        },
-        "job_role": job_role
+        "best_match": results[0],
+        "all_matches": results
     }
