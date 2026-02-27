@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   User,
@@ -11,9 +11,11 @@ import {
   Check,
   X,
   ChevronDown,
+  Loader2,
 } from "lucide-react";
 
-// Job roles (30+ scalable)
+/* ---------------- ROLES ---------------- */
+
 const JOB_ROLES = [
   "All",
   "Frontend Engineer",
@@ -48,42 +50,57 @@ const JOB_ROLES = [
   "Engineering Manager",
 ];
 
-// Dummy data
-const candidates = [
-  { id: "cf-1021", name: "Arjun Menon", role: "Frontend Engineer", score: 92 },
-  { id: "cf-1022", name: "Sneha Nair", role: "Full Stack Developer", score: 88 },
-  { id: "cf-1023", name: "Rahul Das", role: "Backend Engineer", score: 81 },
-];
+/* ---------------- COMPONENT ---------------- */
 
 export default function CandidatesPage() {
+  const [candidates, setCandidates] = useState([]);
   const [selectedRole, setSelectedRole] = useState("All");
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  /* ---------- FETCH CANDIDATES ---------- */
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(
+          `http://localhost:8080/api/candidate?role=${encodeURIComponent(selectedRole)}`
+        );
+        const data = await res.json();
+        setCandidates(data.candidates || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCandidates();
+  }, [selectedRole]);
 
   const filteredRoles = JOB_ROLES.filter((role) =>
     role.toLowerCase().includes(search.toLowerCase())
   );
 
-  const filteredCandidates =
-    selectedRole === "All"
-      ? candidates
-      : candidates.filter((c) => c.role === selectedRole);
+  /* ---------------- UI ---------------- */
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-5xl mx-auto space-y-6">
+      <div className="max-w-5xl mx-auto space-y-8">
+
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">
-              All Candidates
+              Candidates
             </h1>
             <p className="text-gray-500 mt-1">
-              AI-evaluated candidates from Campus Forge Engine
+              AI-evaluated resumes ranked by match score
             </p>
           </div>
 
-          {/* Role Filter Combobox */}
+          {/* Role Filter */}
           <div className="relative w-full md:w-72">
             <button
               onClick={() => setOpen(!open)}
@@ -112,9 +129,9 @@ export default function CandidatesPage() {
                         setOpen(false);
                         setSearch("");
                       }}
-                      className={`px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 ${
+                      className={`px-4 py-2 text-sm cursor-pointer hover:bg-emerald-50 ${
                         selectedRole === role
-                          ? "bg-blue-100 text-blue-700 font-medium"
+                          ? "bg-emerald-100 text-emerald-700 font-medium"
                           : "text-gray-700"
                       }`}
                     >
@@ -127,28 +144,37 @@ export default function CandidatesPage() {
           </div>
         </div>
 
-        {/* Candidate List */}
-        <div className="space-y-4">
-          {filteredCandidates.length === 0 ? (
-            <p className="text-gray-500">No candidates found.</p>
-          ) : (
-            filteredCandidates.map((candidate) => (
+        {/* Content */}
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
+          </div>
+        ) : candidates.length === 0 ? (
+          <p className="text-gray-500 text-center py-20">
+            No candidates found for this role.
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {candidates.map((candidate) => (
               <div
                 key={candidate.id}
                 className="bg-white border rounded-2xl p-6 shadow-sm hover:shadow-md transition"
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+
                   {/* Info */}
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                      <User className="w-6 h-6 text-blue-600" />
+                    <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
+                      <User className="w-6 h-6 text-emerald-600" />
                     </div>
+
                     <div>
                       <p className="font-medium text-gray-900">
                         {candidate.name}
                       </p>
                       <p className="text-xs text-gray-500 flex items-center gap-1">
-                        <Hash className="w-3 h-3" /> {candidate.id}
+                        <Hash className="w-3 h-3" />
+                        {candidate.id}
                       </p>
                       <div className="mt-1 flex items-center gap-2 text-sm text-gray-600">
                         <Briefcase className="w-4 h-4" />
@@ -161,34 +187,40 @@ export default function CandidatesPage() {
                   <div className="min-w-[180px]">
                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                       <BarChart3 className="w-4 h-4" />
-                      Resume Score
+                      Match Score
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+
+                    <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                       <div
-                        className="bg-green-500 h-2 rounded-full"
+                        className="bg-emerald-500 h-2 rounded-full transition-all"
                         style={{ width: `${candidate.score}%` }}
                       />
                     </div>
-                    <p className="text-right text-sm font-medium text-green-600 mt-1">
+
+                    <p className="text-right text-sm font-medium text-emerald-600 mt-1">
                       {candidate.score}%
                     </p>
                   </div>
 
                   {/* Actions */}
                   <div className="flex items-center gap-3">
-                    <button className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700">
+                    <button
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-700"
+                    >
                       <Check className="w-4 h-4" />
                       Accept
                     </button>
 
-                    <button className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-red-100 text-red-600 hover:bg-red-200">
+                    <button
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-red-100 text-red-600 hover:bg-red-200"
+                    >
                       <X className="w-4 h-4" />
                       Reject
                     </button>
 
                     <Link
                       href={`/candidate/${candidate.id}`}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-blue-600 hover:bg-blue-50"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-emerald-600 hover:bg-emerald-50"
                     >
                       View
                       <ArrowRight className="w-4 h-4" />
@@ -196,9 +228,9 @@ export default function CandidatesPage() {
                   </div>
                 </div>
               </div>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

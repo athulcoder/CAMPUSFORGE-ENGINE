@@ -1,4 +1,5 @@
 import time
+from backend.services.candidate_cache import cache_candidate_basic
 
 from backend.services.redis_service import dequeue_resume_job,update_resume_status
 from backend.services.minio_service import download_from_minio
@@ -72,7 +73,7 @@ while True:
             resume.resume_score = score_data["score"]
             resume.matched_role = score_data.get("matched_role")
             resume.processing_status = ProcessingStatus.COMPLETED
-
+                
             db.commit()
 
             update_resume_status(
@@ -82,6 +83,17 @@ while True:
                 message="Resume processed successfully"
             )
 
+            # after extract_all_and_save_to_db(...)
+            candidate = resume.candidate
+
+            candidate_name = candidate.full_name if candidate else None
+
+            cache_candidate_basic({
+                "id": resume_id,
+                "name": candidate_name,
+                "role": score_data.get("matched_role") or "NONE",
+                "score": score_data["score"]
+            })
             print(f"✅ Resume {resume_id} completed")
 
         except Exception as e:

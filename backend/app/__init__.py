@@ -27,8 +27,9 @@ def create_app():
     from backend.app.routes.auth_routes import auth_bp
     from backend.app.routes.recruter_routes import recruiter_bp
     from backend.app.routes.resume_routes import resume_bp
-
+    from backend.app.routes.candidate_routes import candidate_bp
     app.register_blueprint(auth_bp)
+    app.register_blueprint(candidate_bp)
     app.register_blueprint(recruiter_bp)
     app.register_blueprint(resume_bp)
 
