@@ -178,7 +178,7 @@ export default function CandidatesPage() {
                       </p>
                       <div className="mt-1 flex items-center gap-2 text-sm text-gray-600">
                         <Briefcase className="w-4 h-4" />
-                        {candidate.job_role}
+                       Matching role:  {candidate.job_role}
                       </div>
                     </div>
                   </div>

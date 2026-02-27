@@ -24,7 +24,7 @@ export default function Toast({ message, type = "success", onClose }) {
   return (
     <div
       className={`
-        fixed bottom-5 right-5 z-50
+        fixed top-16 right-6 z-50
         min-w-[260px]
         px-4 py-3
         rounded-lg

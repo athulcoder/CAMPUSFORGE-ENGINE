@@ -181,10 +181,10 @@ export default function RecruiterDashboard() {
         {/* Header */}
         <header>
           <h1 className="text-3xl font-semibold text-gray-900">
-            Resume Processing Pipeline
+            Campus Forge – Smart Campus Hiring Platform
           </h1>
           <p className="text-gray-500 mt-1">
-            Multi-upload · Redis · WebSockets
+            One Upload. Smart Ranking. Real time
           </p>
         </header>
 

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response,redirect
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
@@ -91,3 +91,21 @@ def me():
     return jsonify({
         "recruiter": recruiter.get_recruiter()
     }), 200
+
+
+@auth_bp.route("/logout", methods=['GET','POST'])
+def logout():
+    response = make_response("Logout was successful", 200)
+
+    response.set_cookie(
+        "sessionId",
+        "",
+        httponly=True,
+        secure=True,    
+        expires=0,
+        samesite="None",
+        max_age=0,
+        path='/'
+    )
+
+    return response
