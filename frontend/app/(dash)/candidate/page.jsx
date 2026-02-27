@@ -96,7 +96,7 @@ export default function CandidatesPage() {
               Candidates
             </h1>
             <p className="text-gray-500 mt-1">
-              AI-evaluated resumes ranked by match score
+              Resumes ranked by match score
             </p>
           </div>
 
