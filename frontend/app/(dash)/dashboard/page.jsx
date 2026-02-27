@@ -13,6 +13,10 @@ import {
 
 import { uploadResume } from "./action";
 
+/* ---------------- CONFIG ---------------- */
+
+const MAX_FILE_SIZE_MB = 5;
+
 /* ---------------- PIPELINE ---------------- */
 
 const PIPELINE_STEPS = [
@@ -56,11 +60,9 @@ function getStatusLabel(status) {
 
 export default function RecruiterDashboard() {
   const [files, setFiles] = useState([]);
-
-  // 🔑 socket lifecycle guard
   const socketStarted = useRef(false);
 
-  /* ---------- START SOCKET (LAZY) ---------- */
+  /* ---------- SOCKET (LAZY, ONCE) ---------- */
   const startSocketIfNeeded = () => {
     if (socketStarted.current) return;
 
@@ -68,8 +70,6 @@ export default function RecruiterDashboard() {
     socketStarted.current = true;
 
     socket.on("resume_status", (data) => {
-      console.log("📩 resume_status", data);
-
       setFiles((prev) =>
         prev.map((f) =>
           f.id === data.resume_id
@@ -86,14 +86,31 @@ export default function RecruiterDashboard() {
     });
   };
 
-  /* ---------- UPLOAD ---------- */
+  /* ---------- MULTI FILE UPLOAD ---------- */
   const handleUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const selectedFiles = Array.from(e.target.files || []);
+    if (selectedFiles.length === 0) return;
 
-    // 🔑 Start socket ONLY now
     startSocketIfNeeded();
 
+    for (const file of selectedFiles) {
+      // Validate PDF
+      if (file.type !== "application/pdf") continue;
+
+      // Validate size
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        alert(`${file.name} exceeds ${MAX_FILE_SIZE_MB}MB`);
+        continue;
+      }
+
+      await processSingleFile(file);
+    }
+
+    e.target.value = ""; // reset input
+  };
+
+  /* ---------- SINGLE FILE PIPELINE ---------- */
+  const processSingleFile = async (file) => {
     const tempId = crypto.randomUUID();
 
     setFiles((prev) => [
@@ -110,7 +127,6 @@ export default function RecruiterDashboard() {
     ]);
 
     try {
-      // uploading
       setFiles((prev) =>
         prev.map((f) =>
           f.id === tempId ? { ...f, status: "UPLOADING" } : f
@@ -125,7 +141,7 @@ export default function RecruiterDashboard() {
         );
       });
 
-      // replace temp ID with backend resume_id
+      // Replace temp ID with resume_id
       setFiles((prev) =>
         prev.map((f) =>
           f.id === tempId
@@ -139,17 +155,24 @@ export default function RecruiterDashboard() {
         )
       );
 
-      // 🔑 Join room AFTER resume_id exists
+      // Join room for THIS resume
       socket.emit("join_resume", { resume_id: res.resume_id });
 
     } catch (err) {
-      console.error(err);
+      console.error("Upload failed:", err);
+      setFiles((prev) =>
+        prev.map((f) =>
+          f.id === tempId ? { ...f, status: "FAILED" } : f
+        )
+      );
     }
   };
 
   const removeFile = (id) => {
     setFiles((prev) => prev.filter((f) => f.id !== id));
   };
+  const canRemove = (status) =>
+  status === "PREPARING_UPLOAD" || status === "FAILED";
 
   /* ---------- RENDER ---------- */
   return (
@@ -162,7 +185,7 @@ export default function RecruiterDashboard() {
             Resume Processing Pipeline
           </h1>
           <p className="text-gray-500 mt-1">
-            Async · Redis · WebSockets
+            Multi-upload · Redis · WebSockets
           </p>
         </header>
 
@@ -171,11 +194,12 @@ export default function RecruiterDashboard() {
           <label className="flex flex-col items-center justify-center border-2 border-dashed border-emerald-300 rounded-xl p-10 cursor-pointer hover:bg-emerald-50 transition">
             <Upload className="w-10 h-10 text-emerald-600 mb-2" />
             <p className="font-medium text-gray-700">
-              Upload resume (PDF)
+              Upload resumes (PDF, up to {MAX_FILE_SIZE_MB}MB)
             </p>
             <input
               type="file"
               accept="application/pdf"
+              multiple
               className="hidden"
               onChange={handleUpload}
             />
@@ -188,27 +212,27 @@ export default function RecruiterDashboard() {
             const stepIndex = getStepIndex(file.status);
 
             return (
-              <div
+                        <div  
                 key={file.id}
-                className="rounded-2xl border bg-white p-6 shadow-sm"
+                className={`rounded-2xl border p-6 shadow-sm transition ${
+                  file.status === "COMPLETED"
+                    ? "bg-emerald-50/60"
+                    : "bg-white"
+                }`}
               >
-                {/* Top */}
+                {/* Header */}
                 <div className="flex justify-between items-start">
                   <div className="flex gap-4 items-center">
                     <div className="h-10 w-10 rounded-xl bg-emerald-100 flex items-center justify-center">
                       <FileText className="w-5 h-5 text-emerald-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">
-                        {file.name}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {file.size}
-                      </p>
+                      <p className="font-medium text-gray-900">{file.name}</p>
+                      <p className="text-xs text-gray-500">{file.size}</p>
                     </div>
                   </div>
 
-                  {file.status !== "COMPLETED" && (
+                  {canRemove(file.status) && (
                     <button
                       onClick={() => removeFile(file.id)}
                       className="text-gray-400 hover:text-red-500 transition"
@@ -218,47 +242,56 @@ export default function RecruiterDashboard() {
                   )}
                 </div>
 
-                {/* Status */}
-                <div className="mt-4 flex items-center gap-2">
+                {/* Status row */}
+                <div className="mt-4 flex items-center gap-3">
                   {file.status === "UPLOADING" && (
                     <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
                   )}
+
                   <span className="text-sm font-medium text-gray-700">
                     {getStatusLabel(file.status)}
                   </span>
+
+                  {typeof file.progress === "number" && (
+                    <span className="ml-auto text-xs font-medium text-gray-500">
+                      {file.progress}%
+                    </span>
+                  )}
                 </div>
 
-                {file.message && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    {file.message}
-                  </p>
+                {/* Progress bar */}
+                {typeof file.progress === "number" && file.status !== "COMPLETED" && (
+                  <div className="mt-3 h-2 w-full rounded-full bg-gray-200 overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-emerald-500 transition-all duration-300"
+                      style={{ width: `${file.progress}%` }}
+                    />
+                  </div>
                 )}
 
-                {/* Stepper */}
+                {file.message && (
+                  <p className="text-xs text-gray-500 mt-2">{file.message}</p>
+                )}
+
+                {/* Pipeline */}
                 <div className="mt-6 grid grid-cols-6 gap-2">
                   {PIPELINE_STEPS.map((step, idx) => (
                     <div key={step} className="text-center">
                       <div
-                        className={`h-2 rounded-full ${
-                          idx <= stepIndex
-                            ? "bg-emerald-500"
-                            : "bg-gray-200"
+                        className={`h-2 rounded-full transition ${
+                          idx <= stepIndex ? "bg-emerald-500" : "bg-gray-200"
                         }`}
                       />
-                      <p className="mt-2 text-xs text-gray-500">
-                        {step}
-                      </p>
+                      <p className="mt-2 text-[10px] text-gray-500">{step}</p>
                     </div>
                   ))}
                 </div>
 
                 {/* Result */}
                 {file.status === "COMPLETED" && (
-                  <div className="mt-6 flex items-center justify-between rounded-xl bg-emerald-50 p-4">
+                  <div className="mt-6 flex items-center justify-between rounded-xl bg-emerald-100/70 p-4">
                     <div>
-                      <p className="text-xs text-gray-600">
-                        Match Score
-                      </p>
+                      <p className="text-xs text-gray-600">Match Score</p>
                       <p className="text-2xl font-bold text-emerald-600">
                         {file.score}%
                       </p>
@@ -273,8 +306,7 @@ export default function RecruiterDashboard() {
                     </Link>
                   </div>
                 )}
-              </div>
-            );
+              </div>);
           })}
         </div>
       </div>
