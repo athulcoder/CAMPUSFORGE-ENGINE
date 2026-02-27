@@ -1,5 +1,5 @@
 "use client";
-
+import { useUploadStore } from "@/lib/uploadStore";
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { socket } from "@/lib/socket";
@@ -58,7 +58,8 @@ function getStatusLabel(status) {
 /* ---------------- COMPONENT ---------------- */
 
 export default function RecruiterDashboard() {
-  const [files, setFiles] = useState([]);
+  const files = useUploadStore((s) => s.files);
+  const setFiles = useUploadStore((s) => s.setFiles);
   const socketStarted = useRef(false);
 
   /* ---------- SOCKET (LAZY, ONCE) ---------- */
