@@ -34,14 +34,20 @@ def score_resume(parsed_resume: dict) -> dict:
             job["job_description"]
         )
 
-        total = round(
-            skill_score + exp_score + edu_score + semantic_score,
-            2
+        weighted_total = (
+            0.4 * skill_score +
+            0.2 * semantic_score +
+            0.3 * exp_score +
+            0.1 * edu_score
         )
 
+        final_score = round(weighted_total * 100, 2)
+        print(final_score,flush=True)
+
+        
         results.append({
             "job_role": role_name,   
-            "score": float(min(total, 100)),
+            "score": float(min(final_score, 100)),
             "breakdown": {
                 "skills": round(skill_score, 2),
                 "experience": round(exp_score, 2),
