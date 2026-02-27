@@ -1,5 +1,5 @@
 "use client";
-import { socket } from "@/lib/socket";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -75,40 +75,10 @@ export default function CandidatesPage() {
         setLoading(false);
       }
     };
-      socket.emit("join_dashboard", {
-          role: selectedRole,
-        });
 
-        // 🟢 New candidate added
-        socket.on("candidate_added", (candidate) => {
-          setCandidates((prev) => {
-            const updated = [candidate, ...prev];
-            return updated.sort((a, b) => b.score - a.score);
-          });
-        });
+    fetchCandidates();
+  }, [selectedRole]);
 
-        // 🟡 Candidate updated (score/status change)
-        socket.on("candidate_updated", (candidate) => {
-          setCandidates((prev) =>
-            prev
-              .map((c) => (c.id === candidate.id ? { ...c, ...candidate } : c))
-              .sort((a, b) => b.score - a.score)
-          );
-        });
-
-        // 🔴 Candidate removed (optional)
-        socket.on("candidate_removed", (id) => {
-          setCandidates((prev) => prev.filter((c) => c.id !== id));
-        });
-
-  // Cleanup on role change / unmount
-  return () => {
-    if (socket) {
-      socket.emit("leave_dashboard", { role: selectedRole });
-      socket.disconnect();
-    }
-  };
-}, [selectedRole]);
   const filteredRoles = JOB_ROLE.filter((role) =>
     role.toLowerCase().includes(search.toLowerCase())
   );
