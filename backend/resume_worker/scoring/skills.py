@@ -13,6 +13,9 @@ def score_skills(
     resume_skills: List[str],
     job_skills: Dict[str, List[str]]
 ) -> float:
+    
+
+    print(f"RESUME SKILLS {resume_skills}\n JOB_SKILLS ")
     """
     Score resume skills against ONE job role.
 
@@ -34,6 +37,7 @@ def score_skills(
 
         required_skill_set = set(required_skills)
         matched_skills = resume_skill_set & required_skill_set
+        
 
         ratio = len(matched_skills) / len(required_skill_set)
         weight = WEIGHTS.get(category, 0)
@@ -41,3 +45,5 @@ def score_skills(
         score += ratio * weight * MAX_SKILL_SCORE
 
     return round(score, 2)
+
+

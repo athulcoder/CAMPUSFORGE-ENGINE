@@ -3,6 +3,8 @@ from backend.resume_worker.normalization.skills import normalize_skills
 from backend.resume_worker.extractor.skills.skill_extraction import extract_skills_from_resume
 from backend.resume_worker.extractor.education.education_extraction import extract_educations_from_resume
 from backend.resume_worker.extractor.candidate.candidate_extraction import extract_candidate
+from backend.resume_worker.extractor.experience.experience_extraction import extract_experiences_from_resume
+
 # ---------------------------------------------------------
 # Education keyword hierarchy (highest wins)
 # ---------------------------------------------------------
@@ -29,28 +31,28 @@ def parse_resume(text: str,resume_id:str) -> dict:
     Parses raw resume text into structured + normalized data.
     Extraction only — no scoring logic here.
     """
-    extract_candidate(text,resume_id)
-    extract_educations_from_resume(text,resume_id)
-    extract_skills_from_resume(text,resume_id)
     text = text.lower()
 
-    skills_section = extract_section(text, "technical skills", "projects")
+    # EXTRACTING CANDIDATE 
+    extract_candidate(text,resume_id)
+    #EXTRACTING EDUCATION STRING 
+    education_string = extract_educations_from_resume(text,resume_id)
+    #EXTRACTING THE SKILLS AS ARRAY
+    myskills =    extract_skills_from_resume(text,resume_id)
 
-    education_section = extract_section(text, "education", "technical skills")
-    experience_section = extract_section(text, "experience", "education")
+    #EXTRACTING EXPERIENCES  
+    experience_text = extract_experiences_from_resume(text,resume_id)
 
-    raw_skills = extract_skills(skills_section)
-    normalized_skills = normalize_skills(raw_skills)
-
-    education_level = extract_highest_education_level(education_section)
-    total_experience_years = extract_years_of_experience(experience_section)
+    
+    education_level = extract_highest_education_level(education_string)
+    total_experience_years = extract_years_of_experience(experience_text)
     
     return {
-        "skills": normalized_skills,                 # ✅ normalized once
-        "education_level": education_level,           # 0–4
+        "skills": myskills,   # normalized skills
+        "education_level": education_level,           
         "total_experience_years": total_experience_years,
-        "education_text": education_section,
-        "experience_text": experience_section,
+        "education_text": education_string,
+        "experience_text": experience_text,
         "raw_text": text
     }
 
@@ -93,13 +95,13 @@ def extract_highest_education_level(text: str) -> int:
 
 
 def extract_years_of_experience(text: str) -> float:
-    """
-    Extract maximum years of experience mentioned.
-    Examples matched:
-    - "3 years"
-    - "5+ years"
-    - "2 yrs"
-    """
+    # """
+    # Extract maximum years of experience mentioned.
+    # Examples matched:
+    # - "3 years"
+    # - "5+ years"
+    # - "2 yrs"
+    # """
     if not text:
         return 0.0
 

@@ -105,5 +105,5 @@ def extract_skills_from_resume(text: str, resume_id: str) -> List[Dict[str, str]
             data=skills,
             resume_id=resume_id
         )
-
-    return skills
+    skill_names = [s["skill_name"] for s in skills]
+    return skill_names

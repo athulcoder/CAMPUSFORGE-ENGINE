@@ -101,8 +101,53 @@ def parse_educations(section: str):
             current_block = []
 
     return educations
+
+
+
+def format_education_as_text(educations: list) -> str:
+    parts = []
+
+    for edu in educations:
+        degree = edu.get("degree")
+        institution = edu.get("institution")
+        start = edu.get("start_year")
+        end = edu.get("end_year")
+        cgpa = edu.get("cgpa")
+
+        text = []
+
+        if degree:
+            text.append(degree)
+
+        if institution:
+            text.append(f"at {institution}")
+
+        if start:
+            year_part = f"({start}"
+            if end:
+                year_part += f"–{end}"
+            else:
+                year_part += "–Present"
+            year_part += ")"
+            text.append(year_part)
+
+        if cgpa:
+            text.append(f"CGPA {cgpa}")
+
+        parts.append(" ".join(text))
+
+    return "; ".join(parts)
+
+
+
 def extract_educations_from_resume(text: str, resume_id):
     section = extract_education_section(text)
     educations = parse_educations(section)
-    save_educations_to_db(educations, resume_id=resume_id)
-    return educations
+
+    if educations:
+        save_educations_to_db(educations, resume_id=resume_id)
+
+    # ✅ return readable string instead of list
+    education_text = format_education_as_text(educations)
+
+    return education_text

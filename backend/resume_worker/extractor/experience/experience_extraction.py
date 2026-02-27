@@ -128,13 +128,57 @@ def parse_experiences(section: str) -> List[Dict]:
     return experiences
 
 
+def format_experiences_as_text(experiences: List[Dict]) -> str:
+    parts = []
 
-def extract_experiences_from_resume(text: str,resume_id:str) -> List[Dict]:
+    for exp in experiences:
+        title = exp.get("job_title")
+        company = exp.get("company")
+        start = exp.get("start_date")
+        end = exp.get("end_date")
+        description = exp.get("description")
+
+        text_parts = []
+
+        # Title + company
+        if title and company:
+            text_parts.append(f"{title} at {company}")
+        elif title:
+            text_parts.append(title)
+        elif company:
+            text_parts.append(company)
+
+        # Dates
+        if start:
+            year_part = f"({start.year}"
+            if end:
+                year_part += f"–{end.year}"
+            else:
+                year_part += "–Present"
+            year_part += ")"
+            text_parts.append(year_part)
+
+        # Short description (trimmed)
+        if description:
+            short_desc = description.strip().replace("\n", " ")
+            short_desc = short_desc[:200]  # avoid very long strings
+            text_parts.append(f": {short_desc}")
+
+        parts.append(" ".join(text_parts))
+
+    return "; ".join(parts)
+
+
+def extract_experiences_from_resume(text: str, resume_id: str) -> str:
     """
-    Full pipeline: raw text → structured experiences
+    Full pipeline: raw text → structured experiences → DB → readable string
     """
     section = extract_experience_section(text)
-    save_experiences_to_db(parse_experiences(section),resume_id=resume_id)
+    experiences = parse_experiences(section)
 
+    if experiences:
+        save_experiences_to_db(experiences, resume_id=resume_id)
 
-    
+    experience_text = format_experiences_as_text(experiences)
+
+    return experience_text
