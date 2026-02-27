@@ -13,12 +13,12 @@ def score_resume(parsed_resume: dict) -> dict:
 
     results = []
 
-    for job in JOB_ROLES:
+    for role_name, job in JOB_ROLES.items():
         skill_score = score_skills(
             parsed_resume["skills"],
             job["skills"]
         )
-        print("Working here athuleee",flush=True)
+
         exp_score = score_experience(
             parsed_resume["total_experience_years"],
             job["min_experience_years"]
@@ -40,8 +40,8 @@ def score_resume(parsed_resume: dict) -> dict:
         )
 
         results.append({
-            "job_role": job["role"],
-            "score": min(total, 100),
+            "job_role": role_name,   
+            "score": float(min(total, 100)),
             "breakdown": {
                 "skills": round(skill_score, 2),
                 "experience": round(exp_score, 2),
@@ -50,7 +50,7 @@ def score_resume(parsed_resume: dict) -> dict:
             }
         })
 
-    # 🔥 Best match first
+    # Best match first
     results.sort(key=lambda x: x["score"], reverse=True)
 
     return {

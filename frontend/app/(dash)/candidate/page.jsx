@@ -16,7 +16,7 @@ import {
 
 /* ---------------- ROLES ---------------- */
 
-const JOB_ROLES = [
+const JOB_ROLE = [
   "All",
   "Frontend Engineer",
   "Backend Engineer",
@@ -178,7 +178,7 @@ export default function CandidatesPage() {
                       </p>
                       <div className="mt-1 flex items-center gap-2 text-sm text-gray-600">
                         <Briefcase className="w-4 h-4" />
-                        {candidate.role}
+                        {candidate.job_role}
                       </div>
                     </div>
                   </div>
