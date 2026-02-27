@@ -1,5 +1,6 @@
 import re
-from typing import Set
+
+from typing import Set, List
 
 SKILL_MAP = {
     # ---------------- LANGUAGES ----------------
@@ -117,27 +118,34 @@ SKILL_MAP = {
     "wireshark": ["wireshark"],
 }
 
-
-def normalize_skills(text: str) -> Set[str]:
+def normalize_skills(raw_skills: List[str]) -> Set[str]:
     """
-    Extract and normalize technical skills from resume text.
-    Returns canonical skill names.
+    Normalize extracted raw skills into canonical skill names.
+    Input: ["Python", "React JS", "Node", "Machine Learning"]
+    Output: {"python", "react", "node.js", "machine learning"}
     """
 
-    text = text.lower()
+    found: Set[str] = set()
 
-    # Normalize separators and symbols
-    text = re.sub(r"[+/|]", " ", text)
-    text = re.sub(r"[^a-z0-9.\s]", " ", text)
+    for raw in raw_skills:
+        skill = raw.lower().strip()
 
-    found = set()
+        # Normalize separators
+        skill = re.sub(r"[+/|]", " ", skill)
 
-    for canonical, variants in SKILL_MAP.items():
-        for variant in variants:
-            # Word-boundary safe regex
-            pattern = rf"(?<!\w){re.escape(variant)}(?!\w)"
-            if re.search(pattern, text):
-                found.add(canonical)
-                break
+        # Keep dots for node.js, next.js
+        skill = re.sub(r"[^a-z0-9.\s]", " ", skill)
+        skill = re.sub(r"\s+", " ", skill).strip()
+
+        for canonical, variants in SKILL_MAP.items():
+            for variant in variants:
+                v = re.escape(variant.lower())
+
+                # Exact skill match (no partial words)
+                pattern = rf"^{v}$"
+
+                if re.match(pattern, skill):
+                    found.add(canonical)
+                    break
 
     return found

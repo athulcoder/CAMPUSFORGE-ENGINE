@@ -18,7 +18,7 @@ def score_resume(parsed_resume: dict) -> dict:
             parsed_resume["skills"],
             job["skills"]
         )
-
+        print("Working here athuleee",flush=True)
         exp_score = score_experience(
             parsed_resume["total_experience_years"],
             job["min_experience_years"]
@@ -31,7 +31,7 @@ def score_resume(parsed_resume: dict) -> dict:
 
         semantic_score = score_semantic(
             parsed_resume["raw_text"],
-            job["description"]
+            job["job_description"]
         )
 
         total = round(

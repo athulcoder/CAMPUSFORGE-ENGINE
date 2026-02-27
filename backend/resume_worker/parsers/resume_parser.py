@@ -28,8 +28,8 @@ def parse_resume(text: str) -> dict:
     Parses raw resume text into structured + normalized data.
     Extraction only — no scoring logic here.
     """
-    text = text.lower()
-    
+    # text = text.lower()
+    print(type(text),flush=True)
     skills_section = extract_section(text, "technical skills", "projects")
     education_section = extract_section(text, "education", "technical skills")
     experience_section = extract_section(text, "experience", "education")
