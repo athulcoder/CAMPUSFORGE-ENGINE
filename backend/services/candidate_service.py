@@ -114,3 +114,35 @@ def get_candidate_full(resume_id: str) -> dict:
 
 
 
+from sqlalchemy import desc
+from backend.db.session import SessionLocal
+from backend.models.resume import Resume, ProcessingStatus
+
+def fetch_candidates_from_db(role=None, limit=50):
+    db = SessionLocal()
+    try:
+        q = (
+            db.query(Resume)
+            .filter(Resume.processing_status == ProcessingStatus.COMPLETED)
+        )
+
+        if role and role != "All":
+            q = q.filter(Resume.maching_role == role)
+
+        resumes = (
+            q.order_by(desc(Resume.resume_score))
+             .limit(limit)
+             .all()
+        )
+
+        return [
+            {
+                "id": r.id,
+                "name": r.candidate.full_name if r.candidate else None,
+                "job_role": r.maching_role,
+                "score": r.resume_score,
+            }
+            for r in resumes
+        ]
+    finally:
+        db.close()
