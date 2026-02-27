@@ -2,6 +2,7 @@ from flask import Flask
 from .config import Config
 from .extensions import jwt
 from flask_cors import CORS
+from backend.app.websockets.socket import socketio
 
 def create_app():
     app = Flask(__name__)
@@ -17,10 +18,11 @@ def create_app():
     )
 
     jwt.init_app(app)
+    socketio.init_app(app)
 
-    # ✅ IMPORTANT: import models ONCE to register metadata
+    # IMPORTANT: import models once
     import backend.models  
-
+    import backend.app.websockets.events
     # Register blueprints
     from backend.app.routes.auth_routes import auth_bp
     from backend.app.routes.recruter_routes import recruiter_bp

@@ -1,16 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
+import { socket } from "@/lib/socket";
 import {
   Upload,
   FileText,
   Trash2,
   Loader2,
-  CircleDot,
-  GitBranch,
-  Briefcase,
-  CheckCircle,
   ArrowRight,
 } from "lucide-react";
 
@@ -19,61 +16,40 @@ import { uploadResume } from "./action";
 /* ---------------- PIPELINE ---------------- */
 
 const PIPELINE_STEPS = [
-  { key: "upload", label: "Upload" },
-  { key: "queue", label: "Queued" },
-  { key: "parsing", label: "Parsing" },
-  { key: "scoring", label: "Scoring" },
-  { key: "matching", label: "Matching" },
-  { key: "completed", label: "Completed" },
+  "UPLOAD",
+  "QUEUED",
+  "PARSING",
+  "SCORING",
+  "MATCHING",
+  "COMPLETED",
 ];
 
-/* ---------------- HELPERS ---------------- */
-
 function getStepIndex(status) {
-  switch (status) {
-    case "PREPARING_UPLOAD":
-    case "UPLOADING":
-    case "UPLOADED":
-      return 0;
-    case "QUEUED":
-      return 1;
-    case "PARSING":
-      return 2;
-    case "SCORING":
-      return 3;
-    case "MATCHING":
-    case "FINALIZING":
-      return 4;
-    case "COMPLETED":
-      return 5;
-    default:
-      return 0;
-  }
+  const map = {
+    PREPARING_UPLOAD: 0,
+    UPLOADING: 0,
+    QUEUED: 1,
+    PARSING: 2,
+    SCORING: 3,
+    MATCHING: 4,
+    FINALIZING: 4,
+    COMPLETED: 5,
+  };
+  return map[status] ?? 0;
 }
 
 function getStatusLabel(status) {
-  switch (status) {
-    case "PREPARING_UPLOAD":
-      return "Preparing upload";
-    case "UPLOADING":
-      return "Uploading resume";
-    case "UPLOADED":
-      return "Upload completed";
-    case "QUEUED":
-      return "Added to queue";
-    case "PARSING":
-      return "Parsing resume";
-    case "SCORING":
-      return "Calculating score";
-    case "MATCHING":
-      return "Matching jobs";
-    case "COMPLETED":
-      return "Completed";
-    case "FAILED":
-      return "Failed";
-    default:
-      return "Pending";
-  }
+  const map = {
+    PREPARING_UPLOAD: "Preparing upload",
+    UPLOADING: "Uploading resume",
+    QUEUED: "Added to queue",
+    PARSING: "Parsing resume",
+    SCORING: "Calculating score",
+    MATCHING: "Matching jobs",
+    COMPLETED: "Completed",
+    FAILED: "Failed",
+  };
+  return map[status] ?? "Pending";
 }
 
 /* ---------------- COMPONENT ---------------- */
@@ -81,40 +57,42 @@ function getStatusLabel(status) {
 export default function RecruiterDashboard() {
   const [files, setFiles] = useState([]);
 
-  /* ---------- POLLING ---------- */
-  const startPolling = (resumeId) => {
-    const interval = setInterval(async () => {
-      const res = await fetch(
-        `http://localhost:8080/api/resume/${resumeId}/status`,
-        { credentials: "include" }
-      );
+  // 🔑 socket lifecycle guard
+  const socketStarted = useRef(false);
 
-      if (!res.ok) return;
+  /* ---------- START SOCKET (LAZY) ---------- */
+  const startSocketIfNeeded = () => {
+    if (socketStarted.current) return;
 
-      const data = await res.json();
+    socket.connect();
+    socketStarted.current = true;
+
+    socket.on("resume_status", (data) => {
+      console.log("📩 resume_status", data);
 
       setFiles((prev) =>
         prev.map((f) =>
-          f.id === resumeId
+          f.id === data.resume_id
             ? {
                 ...f,
                 status: data.status,
+                progress: data.progress ?? f.progress,
                 score: data.score ?? f.score,
+                message: data.message ?? f.message,
               }
             : f
         )
       );
-
-      if (["COMPLETED", "FAILED"].includes(data.status)) {
-        clearInterval(interval);
-      }
-    }, 2000);
+    });
   };
 
   /* ---------- UPLOAD ---------- */
   const handleUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    // 🔑 Start socket ONLY now
+    startSocketIfNeeded();
 
     const tempId = crypto.randomUUID();
 
@@ -126,11 +104,13 @@ export default function RecruiterDashboard() {
         status: "PREPARING_UPLOAD",
         progress: 0,
         score: null,
+        message: null,
       },
       ...prev,
     ]);
 
     try {
+      // uploading
       setFiles((prev) =>
         prev.map((f) =>
           f.id === tempId ? { ...f, status: "UPLOADING" } : f
@@ -145,6 +125,7 @@ export default function RecruiterDashboard() {
         );
       });
 
+      // replace temp ID with backend resume_id
       setFiles((prev) =>
         prev.map((f) =>
           f.id === tempId
@@ -158,7 +139,9 @@ export default function RecruiterDashboard() {
         )
       );
 
-      startPolling(res.resume_id);
+      // 🔑 Join room AFTER resume_id exists
+      socket.emit("join_resume", { resume_id: res.resume_id });
+
     } catch (err) {
       console.error(err);
     }
@@ -179,7 +162,7 @@ export default function RecruiterDashboard() {
             Resume Processing Pipeline
           </h1>
           <p className="text-gray-500 mt-1">
-            Async · Redis · Non-blocking
+            Async · Redis · WebSockets
           </p>
         </header>
 
@@ -207,7 +190,7 @@ export default function RecruiterDashboard() {
             return (
               <div
                 key={file.id}
-                className="rounded-2xl border bg-white/80 backdrop-blur p-6 shadow-sm"
+                className="rounded-2xl border bg-white p-6 shadow-sm"
               >
                 {/* Top */}
                 <div className="flex justify-between items-start">
@@ -245,34 +228,25 @@ export default function RecruiterDashboard() {
                   </span>
                 </div>
 
-                {/* Upload Progress */}
-                {file.status === "UPLOADING" && (
-                  <div className="mt-3">
-                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-emerald-500 transition-all"
-                        style={{ width: `${file.progress}%` }}
-                      />
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {file.progress}%
-                    </p>
-                  </div>
+                {file.message && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    {file.message}
+                  </p>
                 )}
 
                 {/* Stepper */}
                 <div className="mt-6 grid grid-cols-6 gap-2">
                   {PIPELINE_STEPS.map((step, idx) => (
-                    <div key={step.key} className="text-center">
+                    <div key={step} className="text-center">
                       <div
-                        className={`h-2 rounded-full transition ${
+                        className={`h-2 rounded-full ${
                           idx <= stepIndex
                             ? "bg-emerald-500"
                             : "bg-gray-200"
                         }`}
                       />
                       <p className="mt-2 text-xs text-gray-500">
-                        {step.label}
+                        {step}
                       </p>
                     </div>
                   ))}

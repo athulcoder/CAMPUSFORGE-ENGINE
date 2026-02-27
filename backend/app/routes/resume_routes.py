@@ -7,7 +7,7 @@ from backend.db.session import SessionLocal
 from backend.models.resume import Resume, UploadStatus, ProcessingStatus
 from backend.services.minio_service import upload_resume_minio
 from backend.services.redis_service import enqueue_resume_job
-
+from backend.app.websockets.redis_listener import start_redis_listener
 from backend.app.utils.file_validation import validate_file
 
 resume_bp = Blueprint(
@@ -65,9 +65,13 @@ def upload_resume():
         "bucket": "resumes",
         "object_name": object_name
     })
-
+    start_redis_listener(resume_id)
     return jsonify({
         "resume_id": resume_id,
         "upload_status": upload_status,
         "processing_status": processing_status
     }), 201
+
+
+
+

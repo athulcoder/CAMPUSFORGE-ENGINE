@@ -49,17 +49,26 @@ def extract_cgpa(text: str):
 
 
 def extract_years(text: str):
-    match = re.search(r"(19|20)\d{2}\s*[-–]\s*(19|20)\d{2}|(19|20)\d{2}", text)
-    if not match:
-        return None, None
+    text = text.lower()
 
-    years = re.findall(r"(19|20)\d{2}", text)
-    years = [int(y) for y in re.findall(r"\d{4}", text)]
+    # Match ranges like: 2019 - 2023, 2019–2023, 2019 to 2023
+    range_match = re.search(
+        r'((?:19|20)\d{2})\s*(?:-|–|to)\s*((?:19|20)\d{2}|present)',
+        text
+    )
 
-    if len(years) == 1:
-        return years[0], None
-    if len(years) >= 2:
-        return years[0], years[1]
+    if range_match:
+        start_year = int(range_match.group(1))
+        end_year = (
+            None if range_match.group(2) == "present"
+            else int(range_match.group(2))
+        )
+        return start_year, end_year
+
+    # Match single year like: 2021
+    single_match = re.search(r'((?:19|20)\d{2})', text)
+    if single_match:
+        return int(single_match.group(1)), None
 
     return None, None
 

@@ -16,3 +16,5 @@ psycopg2-binary
 minio
 python-dotenv
 scikit-learn
+flask-socketio
+eventlet

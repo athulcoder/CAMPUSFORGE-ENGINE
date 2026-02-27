@@ -31,3 +31,26 @@ def dequeue_resume_job(block: bool = True, timeout: int = 0):
 
     job = redis_client.rpop(QUEUE_NAME)
     return json.loads(job) if job else None
+
+
+
+def update_resume_status(resume_id: str, status: str, progress: int = None, message: str = None):
+    payload = {
+        "resume_id": resume_id,
+        "status": status,
+        "progress": progress,
+        "message": message
+    }
+
+    # Store latest state
+    redis_client.set(
+        f"resume:status:{resume_id}",
+        json.dumps(payload),
+        ex=3600
+    )
+
+    # Publish event
+    redis_client.publish(
+        f"resume:channel:{resume_id}",
+        json.dumps(payload)
+    )

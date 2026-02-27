@@ -1,6 +1,6 @@
 import time
 
-from backend.services.redis_service import dequeue_resume_job
+from backend.services.redis_service import dequeue_resume_job,update_resume_status
 from backend.services.minio_service import download_from_minio
 from backend.db.session import SessionLocal
 from backend.models.resume import Resume, ProcessingStatus
@@ -12,9 +12,7 @@ print("🚀 Resume worker started")
 
 while True:
     try:
-        # 1️⃣ Wait for a job (blocking)
         data = dequeue_resume_job(block=True)
-
         if not data:
             continue
 
@@ -26,28 +24,48 @@ while True:
         resume = None
 
         try:
-            # 2️⃣ Fetch resume row
             resume = db.get(Resume, resume_id)
             if not resume:
-                print(f"⚠️ Resume {resume_id} not found")
                 continue
 
-            # 3️⃣ Mark PARSING
+            # 🔔 STATUS: parsing started
+            update_resume_status(
+                resume_id,
+                status="PARSING",
+                progress=20,
+                message="Downloading resume"
+            )
+
             resume.processing_status = ProcessingStatus.PARSING
             db.commit()
 
-            # 4️⃣ Download PDF from MinIO
             pdf_bytes = download_from_minio(bucket, object_name)
 
-            # 5️⃣ Parse PDF
+            update_resume_status(
+                resume_id,
+                status="PARSING",
+                progress=40,
+                message="Extracting text"
+            )
+
             raw_text = parse_pdf(pdf_bytes)
 
-            # TODO: CREATE EACH TABLE
+            update_resume_status(
+                resume_id,
+                status="PARSING",
+                progress=60,
+                message="Extracting structured data"
+            )
 
-            extract_all_and_save_to_db(raw_text,resume_id)
+            extract_all_and_save_to_db(raw_text, resume_id)
 
+            update_resume_status(
+                resume_id,
+                status="SCORING",
+                progress=80,
+                message="Scoring resume"
+            )
 
-            # 6️⃣ Score resume
             score_data = score_resume(raw_text)
 
             resume.raw_text = raw_text
@@ -56,13 +74,29 @@ while True:
             resume.processing_status = ProcessingStatus.COMPLETED
 
             db.commit()
-            print(f"✅ Resume {resume_id} parsed successfully")
+
+            update_resume_status(
+                resume_id,
+                status="COMPLETED",
+                progress=100,
+                message="Resume processed successfully"
+            )
+
+            print(f"✅ Resume {resume_id} completed")
 
         except Exception as e:
             db.rollback()
             if resume:
                 resume.processing_status = ProcessingStatus.FAILED
                 db.commit()
+
+            update_resume_status(
+                resume_id,
+                status="FAILED",
+                progress=0,
+                message=str(e)
+            )
+
             print(f"🔥 Resume {resume_id} failed:", e)
 
         finally:
