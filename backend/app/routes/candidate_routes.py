@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify
 from backend.services.candidate_cache import (
     get_candidates_by_role,
-    get_candidate_basic
+    cache_candidate_basic
 )
-from backend.app.routes.candidate_repo import get_candidate_full
 
+from backend.services.candidate_service import get_candidate_full
 candidate_bp = Blueprint("candidate", __name__ ,url_prefix="/api" )
 
 
@@ -20,18 +20,19 @@ def list_candidates():
     })
 
 
-# 🔹 FULL PROFILE API (DB HIT)
-@candidate_bp.route("/candidate/<candidate_id>", methods=["GET"])
-def get_candidate(candidate_id):
-    # optional: show basic info instantly
-    basic = get_candidate_basic(candidate_id)
+@candidate_bp.route("/candidate/<resume_id>", methods=["GET"])
+def get_candidate(resume_id: str):
+    """
+    Full candidate profile API
+    Uses resume_id (not candidate_id)
+    Combines Redis + DB data
+    """
 
-    full = get_candidate_full(candidate_id)
+    full = get_candidate_full(resume_id)
+
     if not full:
         return jsonify({"error": "Candidate not found"}), 404
 
-    # merge redis + db data
-    if basic:
-        full.update(basic)
+   
 
-    return jsonify(full)
+    return jsonify(full), 200

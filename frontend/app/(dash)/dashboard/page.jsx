@@ -206,7 +206,7 @@ export default function RecruiterDashboard() {
 
 
         </div>
-          <div><a href={'/candidate'} className="bg-yellow-500 text-white rounded-lg px-2 py-3 cursor-pointer">See all candidates</a></div>
+          <div><a href={`/candidate`} className="bg-yellow-500 text-white rounded-lg px-2 py-3 cursor-pointer">See all candidates</a></div>
 
         {/* List */}
         <div className="space-y-6">
