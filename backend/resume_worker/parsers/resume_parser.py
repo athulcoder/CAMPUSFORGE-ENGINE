@@ -1,7 +1,8 @@
 import re
 from backend.resume_worker.normalization.skills import normalize_skills
-
-
+from backend.resume_worker.extractor.skills.skill_extraction import extract_skills_from_resume
+from backend.resume_worker.extractor.education.education_extraction import extract_educations_from_resume
+from backend.resume_worker.extractor.candidate.candidate_extraction import extract_candidate
 # ---------------------------------------------------------
 # Education keyword hierarchy (highest wins)
 # ---------------------------------------------------------
@@ -23,14 +24,18 @@ EDUCATION_KEYWORDS = {
 }
 
 
-def parse_resume(text: str) -> dict:
+def parse_resume(text: str,resume_id:str) -> dict:
     """
     Parses raw resume text into structured + normalized data.
     Extraction only — no scoring logic here.
     """
-    # text = text.lower()
-    print(type(text),flush=True)
+    extract_candidate(text,resume_id)
+    extract_educations_from_resume(text,resume_id)
+    extract_skills_from_resume(text,resume_id)
+    text = text.lower()
+
     skills_section = extract_section(text, "technical skills", "projects")
+
     education_section = extract_section(text, "education", "technical skills")
     experience_section = extract_section(text, "experience", "education")
 

@@ -19,7 +19,6 @@ from backend.models.resume import Resume, ProcessingStatus
 # Resume processing
 from backend.resume_worker.parsers.pdf_extractor import parse_pdf
 from backend.resume_worker.parsers.resume_parser import parse_resume
-from backend.resume_worker.extractor.extract_all import extract_all_and_save_to_db
 
 # Scoring
 from backend.resume_worker.scoring.resume_scoring import score_resume
@@ -80,12 +79,13 @@ while True:
                 progress=60,
                 message="Extracting structured data"
             )
-
+            
+            
             #  Parse resume into structured sections
-            parsed_resume = parse_resume(raw_text)
-
+            parsed_resume = parse_resume(raw_text,resume_id)
+            
             # Save extracted entities (candidate, skills, education, experience)
-
+            
             update_resume_status(
                 resume_id,
                 status="SCORING",
