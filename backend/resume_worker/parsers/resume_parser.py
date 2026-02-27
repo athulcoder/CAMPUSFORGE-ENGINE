@@ -39,7 +39,7 @@ def parse_resume(text: str) -> dict:
 
     education_level = extract_highest_education_level(education_section)
     total_experience_years = extract_years_of_experience(experience_section)
-
+    
     return {
         "skills": normalized_skills,                 # ✅ normalized once
         "education_level": education_level,           # 0–4

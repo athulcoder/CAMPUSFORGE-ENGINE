@@ -10,7 +10,6 @@ import {
   Loader2,
   ArrowRight,
 } from "lucide-react";
-
 import { uploadResume } from "./action";
 
 /* ---------------- CONFIG ---------------- */
@@ -204,7 +203,10 @@ export default function RecruiterDashboard() {
               onChange={handleUpload}
             />
           </label>
+
+
         </div>
+          <div><a href={'/candidate'} className="bg-yellow-500 text-white rounded-lg px-2 py-3 cursor-pointer">See all candidates</a></div>
 
         {/* List */}
         <div className="space-y-6">
@@ -270,7 +272,7 @@ export default function RecruiterDashboard() {
                 )}
 
                 {file.message && (
-                  <p className="text-xs text-gray-500 mt-2">{file.message}</p>
+                  <p className="text-xs text-green-500 mt-2">{file.message}</p>
                 )}
 
                 {/* Pipeline */}
@@ -290,12 +292,7 @@ export default function RecruiterDashboard() {
                 {/* Result */}
                 {file.status === "COMPLETED" && (
                   <div className="mt-6 flex items-center justify-between rounded-xl bg-emerald-100/70 p-4">
-                    <div>
-                      <p className="text-xs text-gray-600">Match Score</p>
-                      <p className="text-2xl font-bold text-emerald-600">
-                        {file.score}%
-                      </p>
-                    </div>
+             
 
                     <Link
                       href={`/candidate/${file.id}`}

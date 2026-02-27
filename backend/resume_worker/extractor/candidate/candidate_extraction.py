@@ -1,5 +1,5 @@
 import re
-from backend.resume_worker.extractions.candidate.db_save import saveCandidateToDB
+from backend.resume_worker.extractor.candidate.db_save import saveCandidateToDB
 
 def extract_email(text: str) -> str:
     match = re.search(
@@ -16,21 +16,35 @@ def extract_phone(text: str) -> str:
     return match.group(0) if match else ""
 
 
-
 def extract_full_name(text: str) -> str:
     lines = [l.strip() for l in text.split("\n") if l.strip()]
 
-    # Assume name is in first 1–3 lines
-    for line in lines[:3]:
+    blacklist = [
+        "skills", "education", "experience", "projects",
+        "summary", "student", "computer", "science"
+    ]
+
+    candidates = []
+
+    for line in lines:
+        words = line.split()
+
         if (
-            len(line.split()) <= 4
+            2 <= len(words) <= 4
             and not any(char.isdigit() for char in line)
             and "@" not in line
+            and not any(bad in line.lower() for bad in blacklist)
         ):
-            return line.title()
+            # Strong signal if ALL CAPS
+            score = 2 if line.isupper() else 1
+            candidates.append((score, line))
+
+    if candidates:
+        # pick best scored candidate
+        candidates.sort(reverse=True)
+        return candidates[0][1].title()
 
     return ""
-
 def extract_location(text: str) -> str:
     common_locations = [
         "kochi", "ernakulam", "kerala", "bangalore",

@@ -1,7 +1,7 @@
 import re
 from datetime import date
 from typing import List, Dict, Optional
-from  backend.resume_worker.extractions.experience.save_db import save_experiences_to_db
+from  backend.resume_worker.extractor.experience.save_db import save_experiences_to_db
 def extract_experience_section(text: str) -> str:
     """
     Extracts the experience section from resume text.

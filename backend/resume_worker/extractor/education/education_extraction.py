@@ -1,6 +1,6 @@
 import re
 from typing import List, Dict
-from backend.resume_worker.extractions.education.save_db import save_educations_to_db
+from backend.resume_worker.extractor.education.save_db import save_educations_to_db
 def extract_education_section(text: str) -> str:
     if not text:
         return ""
