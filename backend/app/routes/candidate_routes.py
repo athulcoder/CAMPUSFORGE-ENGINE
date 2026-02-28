@@ -12,8 +12,8 @@ candidate_bp = Blueprint("candidate", __name__ ,url_prefix="/api" )
 @candidate_bp.route("/candidate", methods=["GET"])
 def list_candidates():
     role = request.args.get("role", "All")
-    
-    candidates = get_candidates_by_role(role)
+    status = request.args.get("status")
+    candidates = get_candidates_by_role(role,status)
 
     return jsonify({
         "candidates": candidates
@@ -36,3 +36,5 @@ def get_candidate(resume_id: str):
    
 
     return jsonify(full), 200
+
+

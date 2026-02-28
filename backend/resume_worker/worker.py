@@ -121,8 +121,9 @@ while True:
             cache_candidate_basic({
                 "id": resume_id,
                 "name": candidate_name,
-                "job_role": best_match["job_role"],
-                "score": best_match["score"]
+                "job_role": resume.matched_role,
+                "score": resume.resume_score,
+                "status": resume.selection_status.value
             })
 
             print(f"✅ Resume {resume_id} processed successfully")

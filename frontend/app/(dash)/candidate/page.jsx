@@ -49,7 +49,7 @@ const JOB_ROLE = [
   "Tech Lead",
   "Engineering Manager",
 ];
-
+const STATUS_FILTER = ["PENDING", "ACCEPTED", "REJECTED"];
 /* ---------------- COMPONENT ---------------- */
 
 export default function CandidatesPage() {
@@ -59,14 +59,32 @@ export default function CandidatesPage() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
 
+
+  const [actionState, setActionState] = useState(null);
+
+
+  const [actionLoading, setActionLoading] = useState(false);
+
+  const [selectedStatus, setSelectedStatus] = useState("PENDING");
+  const [statusOpen, setStatusOpen] = useState(false);
   /* ---------- FETCH CANDIDATES ---------- */
   useEffect(() => {
-    const fetchCandidates = async () => {
+   const fetchCandidates = async () => {
       setLoading(true);
       try {
+        const params = new URLSearchParams();
+
+        if (selectedRole !== "All") {
+          params.append("role", selectedRole);
+        }
+
+        params.append("status", selectedStatus);
+
         const res = await fetch(
-          `http://localhost:8080/api/candidate?role=${encodeURIComponent(selectedRole)}`
+          `http://localhost:8080/api/candidate?${params.toString()}`,
+          { credentials: "include" }
         );
+
         const data = await res.json();
         setCandidates(data.candidates || []);
       } catch (err) {
@@ -77,13 +95,61 @@ export default function CandidatesPage() {
     };
 
     fetchCandidates();
-  }, [selectedRole]);
+  }, [selectedRole,selectedStatus]);
 
   const filteredRoles = JOB_ROLE.filter((role) =>
     role.toLowerCase().includes(search.toLowerCase())
   );
 
+
+
+const submitReview = async () => {
+  if (!actionState?.note?.trim()) return;
+
+  setActionLoading(true);
+
+  try {
+    await fetch(
+      `http://localhost:8080/api/resume/${actionState.id}/${actionState.type === "accept" ? "approve" : "reject"}`,
+      {
+        method: "POST",
+        credentials: "include", // IMPORTANT (session cookie)
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          review_note: actionState.note,
+        }),
+      }
+    );
+
+    if (selectedStatus === "PENDING") {
+    setCandidates((prev) =>
+    prev.filter((c) => c.id !== actionState.id)
+    );
+}
+
+    setActionState(null);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setActionLoading(false);
+  }
+};
+
+
+
+
+
+
+
+
   /* ---------------- UI ---------------- */
+
+
+
+
+
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -98,6 +164,39 @@ export default function CandidatesPage() {
             <p className="text-gray-500 mt-1">
               Resumes ranked by match score
             </p>
+          </div>
+
+
+          {/* Status Filter */}
+          <div className="relative w-full md:w-52">
+            <button
+              onClick={() => setStatusOpen(!statusOpen)}
+              className="w-full flex items-center justify-between px-4 py-2 bg-white border rounded-lg text-sm text-gray-700 hover:border-gray-400 transition"
+            >
+              <span>{selectedStatus}</span>
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            </button>
+
+            {statusOpen && (
+              <div className="absolute z-20 mt-2 w-full bg-white border rounded-xl shadow-lg">
+                {STATUS_FILTER.map((status) => (
+                  <div
+                    key={status}
+                    onClick={() => {
+                      setSelectedStatus(status);
+                      setStatusOpen(false);
+                    }}
+                    className={`px-4 py-2 text-sm cursor-pointer hover:bg-emerald-50 ${
+                      selectedStatus === status
+                        ? "bg-emerald-100 text-emerald-700 font-medium"
+                        : "text-gray-700"
+                    }`}
+                  >
+                    {status}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Role Filter */}
@@ -184,7 +283,7 @@ export default function CandidatesPage() {
                   </div>
 
                   {/* Score */}
-                  <div className="min-w-[180px]">
+                  <div className="min-w-45">
                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                       <BarChart3 className="w-4 h-4" />
                       Match Score
@@ -203,29 +302,84 @@ export default function CandidatesPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-3">
-                    <button
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-700"
-                    >
-                      <Check className="w-4 h-4" />
-                      Accept
-                    </button>
+                 {candidate.status==="PENDING"?(
+                   <div className="flex flex-col items-end gap-2">
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() =>
+                          setActionState({
+                            id: candidate.id,
+                            type: "accept",
+                            note: "",
+                          })
+                        }
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-700"
+                      >
+                        <Check className="w-4 h-4" />
+                        Accept
+                      </button>
 
-                    <button
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-red-100 text-red-600 hover:bg-red-200"
-                    >
-                      <X className="w-4 h-4" />
-                      Reject
-                    </button>
+                      <button
+                        onClick={() =>
+                          setActionState({
+                            id: candidate.id,
+                            type: "reject",
+                            note: "",
+                          })
+                        }
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-red-100 text-red-600 hover:bg-red-200"
+                      >
+                        <X className="w-4 h-4" />
+                        Reject
+                      </button>
 
-                    <Link
-                      href={`/candidate/${candidate.id}`}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-emerald-600 hover:bg-emerald-50"
-                    >
-                      View
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
+                      <Link
+                        href={`/candidate/${candidate.id}`}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-emerald-600 hover:bg-emerald-50"
+                      >
+                        View
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </div>
+
+                    {/* Review input (only for active candidate) */}
+                    {actionState?.id === candidate.id && (
+                      <div className="w-full mt-2 flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="Add review note..."
+                          value={actionState.note}
+                          onChange={(e) =>
+                            setActionState({
+                              ...actionState,
+                              note: e.target.value,
+                            })
+                          }
+                          className="flex-1 px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        />
+
+                        <button
+                          onClick={submitReview}
+                          disabled={actionLoading}
+                          className={`px-4 py-2 rounded-lg text-sm font-medium text-white ${
+                            actionState.type === "accept"
+                              ? "bg-emerald-600 hover:bg-emerald-700"
+                              : "bg-red-600 hover:bg-red-700"
+                          }`}
+                        >
+                          {actionLoading ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : actionState.type === "accept" ? (
+                            "Confirm"
+                          ) : (
+                            "Confirm"
+                          )}
+                        </button>
+                      </div>
+                    )}
                   </div>
+                 ):""}
+                  
                 </div>
               </div>
             ))}

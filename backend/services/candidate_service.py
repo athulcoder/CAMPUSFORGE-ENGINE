@@ -12,25 +12,16 @@ def get_candidate_full(resume_id: str) -> dict:
     db = SessionLocal()
 
     try:
-        # -------------------------------------------------
-        # 1️⃣ Resume (PRIMARY ENTRY POINT)
-        # -------------------------------------------------
         resume = db.query(Resume).filter_by(id=resume_id).first()
         if not resume:
             return {}
 
-        # -------------------------------------------------
-        # 2️⃣ Candidate (via resume)
-        # -------------------------------------------------
         candidate = (
             db.query(Candidate)
             .filter_by(resume_id=resume.id)
             .first()
         )
 
-        # -------------------------------------------------
-        # 3️⃣ Skills
-        # -------------------------------------------------
         skills = (
             db.query(Skill.skill_name)
             .join(ResumeSkill, Skill.id == ResumeSkill.skill_id)
@@ -38,9 +29,6 @@ def get_candidate_full(resume_id: str) -> dict:
             .all()
         )
 
-        # -------------------------------------------------
-        # 4️⃣ Experience
-        # -------------------------------------------------
         experiences = (
             db.query(Experience)
             .filter_by(resume_id=resume.id)
@@ -48,9 +36,6 @@ def get_candidate_full(resume_id: str) -> dict:
             .all()
         )
 
-        # -------------------------------------------------
-        # 5️⃣ Education
-        # -------------------------------------------------
         educations = (
             db.query(Education)
             .filter_by(resume_id=resume.id)
@@ -58,23 +43,18 @@ def get_candidate_full(resume_id: str) -> dict:
             .all()
         )
 
-        # -------------------------------------------------
-        # 6️⃣ Projects
-        # -------------------------------------------------
         projects = (
             db.query(Project)
             .filter_by(resume_id=resume.id)
             .all()
         )
 
-        # -------------------------------------------------
-        # 7️⃣ Response (Frontend-ready)
-        # -------------------------------------------------
         return {
-            "id": resume.id,  # IMPORTANT: resume id (not candidate id)
+            "id": resume.id,
             "name": candidate.full_name if candidate else "",
             "role": resume.maching_role,
             "score": resume.resume_score,
+            "status": resume.selection_status.value,  # NEW
 
             "skills": [s[0] for s in skills],
 
@@ -101,8 +81,8 @@ def get_candidate_full(resume_id: str) -> dict:
                 {
                     "name": p.project_title,
                     "description": p.description,
-                    "githubRepo":p.github_repo,
-                    "tech stack":p.tech_stack,
+                    "githubRepo": p.github_repo,
+                    "tech_stack": p.tech_stack,
                 }
                 for p in projects
             ],
@@ -113,12 +93,12 @@ def get_candidate_full(resume_id: str) -> dict:
 
 
 
-
 from sqlalchemy import desc
 from backend.db.session import SessionLocal
 from backend.models.resume import Resume, ProcessingStatus
 
-def fetch_candidates_from_db(role=None, limit=50):
+
+def fetch_candidates_from_db(role="All", status="ALL", limit=50):
     db = SessionLocal()
     try:
         q = (
@@ -128,6 +108,9 @@ def fetch_candidates_from_db(role=None, limit=50):
 
         if role and role != "All":
             q = q.filter(Resume.maching_role == role)
+
+        if status and status != "ALL":
+            q = q.filter(Resume.selection_status == status)
 
         resumes = (
             q.order_by(desc(Resume.resume_score))
@@ -141,8 +124,10 @@ def fetch_candidates_from_db(role=None, limit=50):
                 "name": r.candidate.full_name if r.candidate else None,
                 "job_role": r.maching_role,
                 "score": r.resume_score,
+                "status": r.selection_status.value,
             }
             for r in resumes
         ]
+
     finally:
         db.close()
