@@ -1,7 +1,13 @@
 from flask_socketio import join_room
 from backend.app.websockets.socket import socketio
 
-@socketio.on("connect")
+# @socketio.on("connect")
+# def on_connect():
+#     print(" SOCKET CONNECTED")
+
+# @socketio.on("disconnect")
+# def on_disconnect():
+#     print("❌ SOCKET DISCONNECTED")
 
 @socketio.on("join_resume")
 def join_resume(data):

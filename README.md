@@ -85,7 +85,7 @@ http://localhost:8080/api/auth/register
 
 
 ### upload resume 
-```json
+```
 curl -X POST http://localhost:8080/api/resume/upload \
   -F "file=@resume.pdf"
 ```
