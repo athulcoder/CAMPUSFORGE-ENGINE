@@ -19,6 +19,12 @@ class UploadStatus(enum.Enum):
     UPLOADED = "UPLOADED"
 
 
+class SelectionStatus(enum.Enum):
+    PENDING = "PENDING"
+    ACCEPTED = "ACCEPTED"
+    REJECTED = "REJECTED"
+
+
 class ProcessingStatus(enum.Enum):
     QUEUED = "QUEUED"
     PARSING = "PARSING"
@@ -61,6 +67,16 @@ class Resume(Base):
         index=True
     )
 
+    selection_status = Column(
+        Enum(SelectionStatus, name="selection_status_enum"),
+        nullable=False,
+        default=SelectionStatus.PENDING,
+        index=True
+    )   
+    review_note = Column(
+        Text,
+        nullable=True
+    )
     raw_text = Column(Text)
     resume_score = Column(Float)
     maching_role = Column(String, nullable=True)
