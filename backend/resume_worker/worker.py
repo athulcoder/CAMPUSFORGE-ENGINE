@@ -1,6 +1,6 @@
 import time
 
-# Cache service (Redis)
+
 from backend.services.candidate_cache import cache_candidate_basic
 
 # Redis queue + status updates
@@ -84,7 +84,6 @@ while True:
             #  Parse resume into structured sections
             parsed_resume = parse_resume(raw_text,resume_id)
             
-            # Save extracted entities (candidate, skills, education, experience)
             
             update_resume_status(
                 resume_id,

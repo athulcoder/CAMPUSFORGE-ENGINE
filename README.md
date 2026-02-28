@@ -14,7 +14,7 @@ PDF Parser (text only)
    ↓
 Extractor (structured data)
    ↓
-Normalizer (skills, dates, roles)
+Normalizer (skills)
    ↓
 Scoring Engine
    ↓
