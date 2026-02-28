@@ -71,12 +71,11 @@ export default function CandidatesPage() {
   useEffect(() => {
    const fetchCandidates = async () => {
       setLoading(true);
+      setActionState(null);
       try {
         const params = new URLSearchParams();
 
-        if (selectedRole !== "All") {
-          params.append("role", selectedRole);
-        }
+        params.append("role", selectedRole);
 
         params.append("status", selectedStatus);
 

@@ -14,7 +14,11 @@ JOB_ROLES = {
             "bonus": ["system design", "testing"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["computer science", "engineering"],
+        "education_keywords": [
+            "computer science", "engineering",
+            "bachelor", "b.tech", "btech", "be",
+            "m.tech", "mtech", "diploma"
+        ],
         "role_keywords": ["software engineer", "software developer"]
     },
 
@@ -26,7 +30,10 @@ JOB_ROLES = {
             "bonus": ["vite", "storybook", "jest"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["computer science", "engineering", "information technology"],
+        "education_keywords": [
+            "computer science", "engineering", "information technology",
+            "bachelor", "b.tech", "btech", "be", "diploma"
+        ],
         "role_keywords": ["frontend engineer", "frontend developer", "ui developer"]
     },
 
@@ -38,7 +45,11 @@ JOB_ROLES = {
             "bonus": ["docker", "postgresql", "redis", "nginx"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["computer science", "engineering"],
+        "education_keywords": [
+            "computer science", "engineering",
+            "bachelor", "b.tech", "btech", "be",
+            "m.tech", "mtech"
+        ],
         "role_keywords": ["backend engineer", "backend developer"]
     },
 
@@ -50,7 +61,10 @@ JOB_ROLES = {
             "bonus": ["docker", "git", "aws"]
         },
         "min_experience_years": 2,
-        "education_keywords": ["computer science", "engineering"],
+        "education_keywords": [
+            "computer science", "engineering",
+            "bachelor", "b.tech", "btech", "be"
+        ],
         "role_keywords": ["full stack developer", "fullstack engineer"]
     },
 
@@ -62,7 +76,10 @@ JOB_ROLES = {
             "bonus": ["analytics", "user research"]
         },
         "min_experience_years": 2,
-        "education_keywords": ["computer science", "engineering"],
+        "education_keywords": [
+            "computer science", "engineering",
+            "bachelor", "b.tech", "m.tech"
+        ],
         "role_keywords": ["product engineer"]
     },
 
@@ -78,7 +95,10 @@ JOB_ROLES = {
             "bonus": ["vite", "webpack", "jest"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["computer science"],
+        "education_keywords": [
+            "computer science",
+            "bachelor", "b.tech", "btech", "diploma"
+        ],
         "role_keywords": ["react developer", "react engineer"]
     },
 
@@ -90,7 +110,10 @@ JOB_ROLES = {
             "bonus": ["vercel", "vite"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["computer science"],
+        "education_keywords": [
+            "computer science",
+            "bachelor", "b.tech", "btech"
+        ],
         "role_keywords": ["next.js developer"]
     },
 
@@ -102,7 +125,10 @@ JOB_ROLES = {
             "bonus": ["animations", "performance optimization"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["design", "computer science"],
+        "education_keywords": [
+            "design", "computer science",
+            "bachelor", "diploma"
+        ],
         "role_keywords": ["ui engineer"]
     },
 
@@ -114,7 +140,10 @@ JOB_ROLES = {
             "bonus": ["figma", "adobe xd"]
         },
         "min_experience_years": 0,
-        "education_keywords": ["design", "arts"],
+        "education_keywords": [
+            "design", "arts",
+            "bachelor", "diploma"
+        ],
         "role_keywords": ["ui designer", "ux designer"]
     },
 
@@ -130,7 +159,10 @@ JOB_ROLES = {
             "bonus": ["docker", "pm2"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["computer science"],
+        "education_keywords": [
+            "computer science",
+            "bachelor", "b.tech", "btech"
+        ],
         "role_keywords": ["node developer", "node.js engineer"]
     },
 
@@ -142,7 +174,10 @@ JOB_ROLES = {
             "bonus": ["monitoring", "automation"]
         },
         "min_experience_years": 2,
-        "education_keywords": ["computer science", "engineering"],
+        "education_keywords": [
+            "computer science", "engineering",
+            "b.tech", "diploma"
+        ],
         "role_keywords": ["system engineer"]
     },
 
@@ -154,7 +189,10 @@ JOB_ROLES = {
             "bonus": ["chaos engineering"]
         },
         "min_experience_years": 2,
-        "education_keywords": ["computer science", "engineering"],
+        "education_keywords": [
+            "computer science", "engineering",
+            "b.tech", "m.tech"
+        ],
         "role_keywords": ["site reliability engineer", "sre"]
     },
 
@@ -166,7 +204,10 @@ JOB_ROLES = {
             "bonus": ["jenkins", "github actions"]
         },
         "min_experience_years": 2,
-        "education_keywords": ["computer science", "engineering"],
+        "education_keywords": [
+            "computer science", "engineering",
+            "b.tech", "m.tech"
+        ],
         "role_keywords": ["devops engineer"]
     },
 
@@ -178,7 +219,10 @@ JOB_ROLES = {
             "bonus": ["cloudformation"]
         },
         "min_experience_years": 2,
-        "education_keywords": ["computer science"],
+        "education_keywords": [
+            "computer science",
+            "b.tech", "m.tech"
+        ],
         "role_keywords": ["cloud engineer"]
     },
 
@@ -194,7 +238,10 @@ JOB_ROLES = {
             "bonus": ["python", "tableau"]
         },
         "min_experience_years": 0,
-        "education_keywords": ["statistics", "data analytics"],
+        "education_keywords": [
+            "statistics", "data analytics",
+            "bachelor", "diploma"
+        ],
         "role_keywords": ["data analyst"]
     },
 
@@ -206,7 +253,10 @@ JOB_ROLES = {
             "bonus": ["jupyter", "sql"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["data science", "statistics"],
+        "education_keywords": [
+            "data science", "statistics",
+            "bachelor", "m.sc", "msc"
+        ],
         "role_keywords": ["data scientist"]
     },
 
@@ -218,7 +268,10 @@ JOB_ROLES = {
             "bonus": ["mlops", "docker"]
         },
         "min_experience_years": 2,
-        "education_keywords": ["computer science", "data science"],
+        "education_keywords": [
+            "computer science", "data science",
+            "b.tech", "m.tech"
+        ],
         "role_keywords": ["ml engineer"]
     },
 
@@ -230,7 +283,10 @@ JOB_ROLES = {
             "bonus": ["nlp", "computer vision"]
         },
         "min_experience_years": 2,
-        "education_keywords": ["artificial intelligence", "computer science"],
+        "education_keywords": [
+            "artificial intelligence", "computer science",
+            "b.tech", "m.tech"
+        ],
         "role_keywords": ["ai engineer"]
     },
 
@@ -246,7 +302,10 @@ JOB_ROLES = {
             "bonus": ["selenium", "postman"]
         },
         "min_experience_years": 0,
-        "education_keywords": ["computer science"],
+        "education_keywords": [
+            "computer science",
+            "bachelor", "diploma"
+        ],
         "role_keywords": ["qa engineer", "test engineer"]
     },
 
@@ -258,7 +317,10 @@ JOB_ROLES = {
             "bonus": ["ci/cd"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["computer science"],
+        "education_keywords": [
+            "computer science",
+            "b.tech", "bachelor"
+        ],
         "role_keywords": ["automation engineer"]
     },
 
@@ -270,7 +332,10 @@ JOB_ROLES = {
             "bonus": ["burp suite", "wireshark"]
         },
         "min_experience_years": 2,
-        "education_keywords": ["cybersecurity", "computer science"],
+        "education_keywords": [
+            "cybersecurity", "computer science",
+            "b.tech", "m.tech"
+        ],
         "role_keywords": ["security engineer"]
     },
 
@@ -286,7 +351,10 @@ JOB_ROLES = {
             "bonus": ["web3", "cryptography"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["computer science"],
+        "education_keywords": [
+            "computer science",
+            "b.tech", "bachelor"
+        ],
         "role_keywords": ["blockchain developer"]
     },
 
@@ -298,7 +366,10 @@ JOB_ROLES = {
             "bonus": ["graphics", "physics"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["computer science"],
+        "education_keywords": [
+            "computer science",
+            "bachelor", "diploma"
+        ],
         "role_keywords": ["game developer"]
     },
 
@@ -310,7 +381,10 @@ JOB_ROLES = {
             "bonus": ["c#", "blender"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["computer science"],
+        "education_keywords": [
+            "computer science",
+            "bachelor", "diploma"
+        ],
         "role_keywords": ["ar developer", "vr developer"]
     },
 
@@ -322,7 +396,10 @@ JOB_ROLES = {
             "bonus": ["rtos"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["electronics", "engineering"],
+        "education_keywords": [
+            "electronics", "engineering",
+            "diploma", "b.tech"
+        ],
         "role_keywords": ["embedded engineer"]
     },
 
@@ -334,7 +411,10 @@ JOB_ROLES = {
             "bonus": ["cloud integration"]
         },
         "min_experience_years": 1,
-        "education_keywords": ["electronics", "computer science"],
+        "education_keywords": [
+            "electronics", "computer science",
+            "diploma", "b.tech"
+        ],
         "role_keywords": ["iot engineer"]
     },
 
@@ -350,7 +430,10 @@ JOB_ROLES = {
             "bonus": ["architecture"]
         },
         "min_experience_years": 4,
-        "education_keywords": ["computer science", "engineering"],
+        "education_keywords": [
+            "computer science", "engineering",
+            "b.tech", "m.tech"
+        ],
         "role_keywords": ["tech lead"]
     },
 
@@ -362,7 +445,10 @@ JOB_ROLES = {
             "bonus": ["jira", "confluence"]
         },
         "min_experience_years": 5,
-        "education_keywords": ["computer science", "engineering"],
+        "education_keywords": [
+            "computer science", "engineering",
+            "b.tech", "m.tech", "mba"
+        ],
         "role_keywords": ["engineering manager", "tech manager"]
     }
 }

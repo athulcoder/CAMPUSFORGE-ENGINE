@@ -100,9 +100,12 @@ while True:
             #  Update resume record
             resume.raw_text = raw_text
             resume.resume_score = best_match["score"]
-            resume.matched_role = best_match["job_role"]
+            resume.maching_role = best_match["job_role"]
             resume.processing_status = ProcessingStatus.COMPLETED
+            
 
+            print("BEST MATCH ", best_match)
+            print(resume.maching_role , "BEFORE ALL")
             db.commit()
 
             #  STATUS: Completed
@@ -121,7 +124,7 @@ while True:
             cache_candidate_basic({
                 "id": resume_id,
                 "name": candidate_name,
-                "job_role": resume.matched_role,
+                "job_role": best_match['job_role'],
                 "score": resume.resume_score,
                 "status": resume.selection_status.value
             })
