@@ -1,24 +1,31 @@
+// config.js
+
 export const BASE_URL = "http://localhost:8080";
 
-export const USER = {
-  email: "mail@email.com",
-  password: "123456",
+export const USERS_20 = {
+  vus: 20,          // 👈 20 concurrent users
+  duration: "2m",   // test runs for 2 minutes
 };
 
-export const OPTIONS_UNIT = {
-  vus: 1,
-  iterations: 1,
-};
+export const OPTIONS_20_USERS = {
+  vus: 20,
+  duration: "2m",
 
-export const OPTIONS_LOAD = {
-  stages: [
-    { duration: "20s", target: 5 },
-    { duration: "30s", target: 10 },
-    { duration: "30s", target: 20 },
-    { duration: "20s", target: 0 },
-  ],
   thresholds: {
     http_req_failed: ["rate<0.01"],
-    http_req_duration: ["p95<800"],
+
+    // AUTH
+    "http_req_duration{api:register}": ["p(95)<800"],
+    "http_req_duration{api:login}": ["p(95)<700"],
+
+    // REDIS (FAST READS)
+    "http_req_duration{api:candidate_all}": ["p(95)<250"],
+    "http_req_duration{api:candidate_role}": ["p(95)<250"],
+
+    // DB / MIXED
+    "http_req_duration{api:candidate_id}": ["p(95)<350"],
+
+    // ASYNC UPLOAD
+    "http_req_duration{api:resume_upload}": ["p(95)<4000"],
   },
 };
