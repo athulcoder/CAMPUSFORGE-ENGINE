@@ -96,12 +96,12 @@ export default function LoginPage() {
               Show password
             </label>
 
-            <Link
+            {/* <Link
               href="/forgot-password"
               className="text-blue-600 hover:underline"
             >
               Forgot password?
-            </Link>
+            </Link> */}
           </div>
 
           {/* Login Button */}
