@@ -28,6 +28,7 @@ Redis (fast view) + DB (full data)
 
 Ensure that <b>git</b> and <b>docker</b> is installed in your system.
 
+also ensure that DOCKER  Desktop is LIVE
 ### Clone the repository:
 
 ```bash
