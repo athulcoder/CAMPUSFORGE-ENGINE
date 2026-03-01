@@ -11,7 +11,6 @@ from backend.services.candidate_service import get_candidate_full
 candidate_bp = Blueprint("candidate", __name__ ,url_prefix="/api" )
 
 
-# 🔹 FAST LIST API (REDIS ONLY)
 @candidate_bp.route("/candidate", methods=["GET"])
 @jwt_required()
 def list_candidates():

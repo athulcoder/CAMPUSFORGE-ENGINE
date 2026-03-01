@@ -390,7 +390,7 @@ const submitReview = async () => {
                     )}
                   </div>
                  ):(
-                  <div> {candidate.review_note} </div>
+                  ""
                  )}
                   
                 </div>

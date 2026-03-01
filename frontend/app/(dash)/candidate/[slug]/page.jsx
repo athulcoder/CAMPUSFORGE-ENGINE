@@ -13,14 +13,12 @@ import {
 export default function CandidateProfilePage() {
   const params = useParams();
 
-  // ✅ resume_id from route
   const resume_id = params.slug
 
   const [candidate, setCandidate] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ---------------- FETCH DATA (FIXED) ----------------
   useEffect(() => {
     if (!resume_id) return;
 
@@ -50,8 +48,7 @@ export default function CandidateProfilePage() {
       .finally(() => setLoading(false));
   }, [resume_id]);
 
-  // ---------------- LOADING ----------------
-// ---------- LOADING SKELETON ----------
+  
 if (loading) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 p-8">
@@ -64,7 +61,6 @@ if (loading) {
     </div>
   );
 }
-  // ---------------- ERROR ----------------
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center text-red-600">
@@ -75,7 +71,6 @@ if (loading) {
 
   if (!candidate) return null;
 
-  // ---------------- UI ----------------
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto space-y-8">

@@ -12,14 +12,12 @@ from backend.models.recruiter import Recruiter
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 
-# --------------------------------------------------
 # REGISTER
-# --------------------------------------------------
 @auth_bp.post("/register")
 def register():
     data = request.get_json()
 
-    # Validate input
+
     if not data or not data.get("email") or not data.get("password") or not data.get("name"):
         return jsonify({"error": "All fields are required"}), 400
 
@@ -66,7 +64,7 @@ def login():
         db.close()
         return jsonify({"error": "Invalid email or password"}), 401
 
-    # 🔐 Create JWT
+  
     access_token = create_access_token(identity=recruiter.id)
 
     db.close()

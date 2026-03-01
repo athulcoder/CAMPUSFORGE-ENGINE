@@ -15,11 +15,11 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // UI-only
+  const [loading, setLoading] = useState(false); 
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (loading) return; // 🔒 one click only
+    if (loading) return; 
 
     if (!name || !email || !password) {
       setError("All fields are required");

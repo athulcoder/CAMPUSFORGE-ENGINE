@@ -10,11 +10,11 @@ export default function AuthLayout({ children }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    // 🔄 If already logged in → go to dashboard
+    
     if (token) {
       router.replace("/dashboard");
     } else {
-      setReady(true); // allow login/register
+      setReady(true); 
     }
   }, [router]);
 

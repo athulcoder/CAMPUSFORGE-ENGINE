@@ -55,14 +55,12 @@ function getStatusLabel(status) {
   return map[status] ?? "Pending";
 }
 
-/* ---------------- COMPONENT ---------------- */
 
 export default function RecruiterDashboard() {
   const files = useUploadStore((s) => s.files);
   const setFiles = useUploadStore((s) => s.setFiles);
   const socketStarted = useRef(false);
 
-  /* ---------- SOCKET (LAZY, ONCE) ---------- */
   const startSocketIfNeeded = () => {
     if (socketStarted.current) return;
 
@@ -109,7 +107,7 @@ export default function RecruiterDashboard() {
     e.target.value = ""; // reset input
   };
 
-  /* ---------- SINGLE FILE PIPELINE ---------- */
+  /* ----------  FILE PIPELINE ---------- */
   const processSingleFile = async (file) => {
     const tempId = crypto.randomUUID();
 

@@ -26,10 +26,9 @@ def create_app():
     jwt.init_app(app)
     socketio.init_app(app)
 
-    # IMPORTANT: import models once
     import backend.models  
     import backend.app.websockets.events
-    # Register blueprints
+    #registering each routes
     from backend.app.routes.auth_routes import auth_bp
     from backend.app.routes.recruter_routes import recruiter_bp
     from backend.app.routes.resume_routes import resume_bp

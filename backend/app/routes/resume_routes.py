@@ -33,7 +33,7 @@ def upload_resume():
 
     file_bytes = file.read()
 
-    # 1️⃣ Upload to MinIO
+#    Upload to MinIO
     upload_resume_minio(
         object_name=object_name,
         data=file_bytes,
@@ -58,7 +58,6 @@ def upload_resume():
     db.commit()
     db.close()
 
-    # 3️⃣ Enqueue Redis job (async, non-blocking)
     enqueue_resume_job({
         "resume_id": resume_id,
         "bucket": "resumes",

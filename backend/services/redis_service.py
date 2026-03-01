@@ -34,6 +34,8 @@ def dequeue_resume_job(block: bool = True, timeout: int = 0):
 
 
 
+
+# this function is used to show users the status of the proccess real time 
 def update_resume_status(resume_id: str, status: str, progress: int = None, message: str = None):
     payload = {
         "resume_id": resume_id,

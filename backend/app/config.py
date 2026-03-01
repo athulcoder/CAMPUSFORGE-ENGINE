@@ -18,8 +18,6 @@ class Config:
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY");
     JWT_COOKIE_CSRF_PROTECT = False
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=7)
-    JWT_COOKIE_SECURE = True
-    JWT_COOKIE_SAMESITE = "None"
 
     JWT_TOKEN_LOCATION = ["headers"]
     JWT_HEADER_NAME = "Authorization"

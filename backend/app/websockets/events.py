@@ -8,10 +8,10 @@ def on_connect():
 
 @socketio.on("disconnect")
 def on_disconnect():
-    print("❌ SOCKET DISCONNECTED")
+    print(" SOCKET DISCONNECTED")
 
 @socketio.on("join_resume")
 def join_resume(data):
     resume_id = data["resume_id"]
     join_room(resume_id)
-    print(f"🟢 Client joined room {resume_id}")
+    print(f" Client joined room {resume_id}")
