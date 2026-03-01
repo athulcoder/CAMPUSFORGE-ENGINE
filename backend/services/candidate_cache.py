@@ -21,6 +21,7 @@ def cache_candidate_basic(candidate):
     score = candidate["score"]
     role = candidate["job_role"]
     status = candidate["status"]
+    
 
     # Store candidate basic data
     r.set(

@@ -10,23 +10,11 @@ export const actionLogin = async (email, password) => {
     }
   );
 
-  // Always check response
-  if (!res.ok) {
-    throw new Error("Login failed");
-  }
 
   const data = await res.json();
 
-  /*
-    Backend returns:
-    {
-      success: true,
-      access_token: "...",
-      recruiter: {...}
-    }
-  */
+  
 
-  // 🔐 Store JWT (simple & common)
   if (data.access_token) {
     localStorage.setItem("token", data.access_token);
   }

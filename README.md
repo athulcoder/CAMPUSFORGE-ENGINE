@@ -44,11 +44,19 @@ cd campus-forge-engine
 | 9001 | MinIO Console |
 
 ### Run docker compose
+
+#### backend (within the root folder )
 ``` bash
 docker compose up --build
 ```
+#### frontend 
+```bash
+cd frontend
+npm run build
+npm start
+```
+since cors is setted on port 3000 run frontend on port 3000 (default)
 
-#### frontend
 Go to 
 ```
 http://localhost:3000
@@ -82,7 +90,9 @@ http://localhost:8080/api/auth/register
 }
 ```
 
-
+## Below APIs needs proper authentications to test
+#### headers
+Authorization : Bearer {token}
 
 ### upload resume 
 ```
@@ -110,3 +120,11 @@ Example
 http://localhost:8080/api/candidate/a4ef69e4-8c00-40b5-b854-46e8d9571ef6
 ```
 
+#### TO approve a resume
+``` 
+http://localhost:8080/api/candidate/<resume_id>/approve
+```
+
+``` 
+http://localhost:8080/api/candidate/<resume_id>/reject
+```
