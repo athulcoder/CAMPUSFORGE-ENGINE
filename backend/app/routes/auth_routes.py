@@ -67,7 +67,7 @@ def login():
         "sessionId",
         access_token,
         httponly=True,
-        secure=True,       # must be True in prod
+        secure=False,      
         samesite="None",
         max_age=60 * 60 * 24 * 7
     )
@@ -101,7 +101,7 @@ def logout():
         "sessionId",
         "",
         httponly=True,
-        secure=True,    
+        secure=False,    
         expires=0,
         samesite="None",
         max_age=0,
