@@ -67,7 +67,7 @@ def login():
         "sessionId",
         access_token,
         httponly=True,
-        secure=False,      
+        secure=True,       
         samesite="None",
         max_age=60 * 60 * 24 * 7
     )
@@ -101,7 +101,7 @@ def logout():
         "sessionId",
         "",
         httponly=True,
-        secure=False,    
+        secure=True,    
         expires=0,
         samesite="None",
         max_age=0,
