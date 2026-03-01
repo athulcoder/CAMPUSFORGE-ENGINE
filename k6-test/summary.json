@@ -1,0 +1,300 @@
+{
+  "metrics": {
+    "http_reqs": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 17,
+        "rate": 0.635115569738641
+      }
+    },
+    "vus": {
+      "contains": "default",
+      "values": {
+        "max": 1,
+        "value": 1,
+        "min": 1
+      },
+      "type": "gauge"
+    },
+    "approve_latency": {
+      "values": {
+        "min": 2.661,
+        "med": 4.339,
+        "max": 5.434,
+        "p(90)": 5.0112000000000005,
+        "p(95)": 5.2226,
+        "avg": 4.200200000000001
+      },
+      "type": "trend",
+      "contains": "default"
+    },
+    "get_all_latency": {
+      "type": "trend",
+      "contains": "default",
+      "values": {
+        "avg": 1047.96,
+        "min": 1047.96,
+        "med": 1047.96,
+        "max": 1047.96,
+        "p(90)": 1047.96,
+        "p(95)": 1047.96
+      }
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.2043529411764706,
+        "min": 0.01,
+        "med": 0.014,
+        "max": 1.232,
+        "p(90)": 0.549,
+        "p(95)": 0.7143999999999995
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.03347058823529412,
+        "min": 0,
+        "med": 0,
+        "max": 0.402,
+        "p(90)": 0.06680000000000007,
+        "p(95)": 0.21399999999999986
+      }
+    },
+    "http_req_tls_handshaking": {
+      "contains": "time",
+      "values": {
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0
+      },
+      "type": "trend"
+    },
+    "http_req_sending": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 0.042,
+        "med": 0.073,
+        "max": 2.609,
+        "p(90)": 1.6048000000000004,
+        "p(95)": 2.1497999999999995,
+        "avg": 0.4758823529411765
+      }
+    },
+    "http_req_waiting": {
+      "values": {
+        "p(90)": 749.5304,
+        "p(95)": 814.6517999999998,
+        "avg": 278.1720588235294,
+        "min": 2.5,
+        "med": 4.218,
+        "max": 1047.427
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 10828,
+        "rate": 404.5312581841179
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0.6470588235294118,
+        "passes": 11,
+        "fails": 6
+      }
+    },
+    "checks": {
+      "values": {
+        "passes": 6,
+        "fails": 11,
+        "rate": 0.35294117647058826
+      },
+      "type": "rate",
+      "contains": "default"
+    },
+    "iteration_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 26766.31425,
+        "min": 26766.31425,
+        "med": 26766.31425,
+        "max": 26766.31425,
+        "p(90)": 26766.31425,
+        "p(95)": 26766.31425
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 698.12,
+        "med": 736.95,
+        "max": 1047.96,
+        "p(90)": 902.816,
+        "p(95)": 975.3879999999999,
+        "avg": 782.2518333333334
+      }
+    },
+    "get_one_latency": {
+      "values": {
+        "avg": 729.1102,
+        "min": 698.12,
+        "med": 727.525,
+        "max": 757.672,
+        "p(90)": 753.1532,
+        "p(95)": 755.4126
+      },
+      "type": "trend",
+      "contains": "default"
+    },
+    "vus_max": {
+      "values": {
+        "value": 1,
+        "min": 1,
+        "max": 1
+      },
+      "type": "gauge",
+      "contains": "default"
+    },
+    "get_role_latency": {
+      "type": "trend",
+      "contains": "default",
+      "values": {
+        "avg": 4.384,
+        "min": 4.384,
+        "med": 4.384,
+        "max": 4.384,
+        "p(90)": 4.384,
+        "p(95)": 4.384
+      }
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 10789,
+        "rate": 403.0742283476587
+      }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 0.18759999999999993,
+        "avg": 0.13152941176470592,
+        "min": 0.096,
+        "med": 0.113,
+        "max": 0.27,
+        "p(90)": 0.16340000000000002
+      }
+    },
+    "http_req_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 278.7794705882353,
+        "min": 2.661,
+        "med": 4.384,
+        "max": 1047.96,
+        "p(90)": 750.8938,
+        "p(95)": 815.7295999999998
+      }
+    },
+    "iterations": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 1,
+        "rate": 0.037359739396390645
+      }
+    },
+    "reject_latency": {
+      "values": {
+        "avg": 4.071,
+        "min": 3.335,
+        "med": 4.1,
+        "max": 4.677,
+        "p(90)": 4.5434,
+        "p(95)": 4.6102
+      },
+      "type": "trend",
+      "contains": "default"
+    }
+  },
+  "root_group": {
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [],
+    "checks": [
+        {
+          "path": "::get all candidates",
+          "id": "43ea0b46604d6ac79999ab1920fc1982",
+          "passes": 1,
+          "fails": 0,
+          "name": "get all candidates"
+        },
+        {
+          "name": "get role based",
+          "path": "::get role based",
+          "id": "c14a5ffe061a8f7cb013224d1a6a3e95",
+          "passes": 0,
+          "fails": 1
+        },
+        {
+          "name": "get single candidate",
+          "path": "::get single candidate",
+          "id": "14147af9ef57d292744d09d36a8a8c74",
+          "passes": 5,
+          "fails": 0
+        },
+        {
+          "name": "approve resume",
+          "path": "::approve resume",
+          "id": "abe5e067137a5b742ae812cff0d277f2",
+          "passes": 0,
+          "fails": 5
+        },
+        {
+          "fails": 5,
+          "name": "reject resume",
+          "path": "::reject resume",
+          "id": "7b594182728e1f3ead3b95d97dd99eb7",
+          "passes": 0
+        }
+      ],
+    "name": ""
+  },
+  "options": {
+    "noColor": false,
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "max",
+      "p(90)",
+      "p(95)"
+    ],
+    "summaryTimeUnit": ""
+  },
+  "state": {
+    "isStdOutTTY": true,
+    "isStdErrTTY": true,
+    "testRunDurationMs": 26766.782
+  }
+}

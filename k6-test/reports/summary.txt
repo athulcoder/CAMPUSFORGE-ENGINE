@@ -1,0 +1,10 @@
+
+API LATENCY SUMMARY
+-------------------
+Login Avg:            13.855 ms
+Register Avg:         265.92 ms
+Resume Upload Avg:    5.449 ms
+Get Candidates Avg:   4.069 ms
+Get By Role Avg:      3.625 ms
+Get Single Avg:       10.499 ms
+Approve Avg:          2.596 ms
