@@ -32,7 +32,7 @@ Ensure that <b>git</b> and <b>docker</b> is installed in your system.
 
 ```bash
 git clone https://github.com/athulcoder/campusforge-engine
-cd campus-forge-engine
+cd campusforge-engine
 ```
 #### ensure that the below ports are free
 | Port | Used By       |
@@ -72,7 +72,7 @@ http://localhost:8080/api/auth/login
 ```
 ```json
 {
-   "email":"mail@email.com"
+   "email":"test@email.com"
    "password":"123456"
 }
 ```
@@ -125,6 +125,19 @@ http://localhost:8080/api/candidate/a4ef69e4-8c00-40b5-b854-46e8d9571ef6
 http://localhost:8080/api/candidate/<resume_id>/approve
 ```
 
+```json
+{
+   "review_note":"simple note ny recruiter"
+}
+```
+
+
+#### To reject a resume 
 ``` 
 http://localhost:8080/api/candidate/<resume_id>/reject
+```
+```json
+{
+   "review_note":"simple note ny recruiter"
+}
 ```
