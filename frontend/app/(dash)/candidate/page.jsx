@@ -80,7 +80,7 @@ export default function CandidatesPage() {
         params.append("status", selectedStatus);
 
         const res = await fetch(
-          `http://localhost:8080/api/candidate?${params.toString()}`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/candidate?${params.toString()}`,
           { credentials: "include" }
         );
 
@@ -109,7 +109,7 @@ const submitReview = async () => {
 
   try {
     await fetch(
-      `http://localhost:8080/api/resume/${actionState.id}/${actionState.type === "accept" ? "approve" : "reject"}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/resume/${actionState.id}/${actionState.type === "accept" ? "approve" : "reject"}`,
       {
         method: "POST",
         credentials: "include", // IMPORTANT (session cookie)

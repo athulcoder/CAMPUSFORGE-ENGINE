@@ -23,7 +23,7 @@ return new Promise( async(resolve, reject) => {
 
     xhr.onerror = reject;
 
-    xhr.open("POST", "http://localhost:8080/api/resume/upload");
+    xhr.open("POST", `${process.env.NEXT_PUBLIC_BASE_URL}/api/resume/upload`);
     xhr.withCredentials = true;
     xhr.send(formData);
   });

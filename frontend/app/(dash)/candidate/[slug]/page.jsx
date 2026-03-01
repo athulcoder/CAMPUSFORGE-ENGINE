@@ -28,7 +28,7 @@ export default function CandidateProfilePage() {
 
     setLoading(true);
 
-    fetch(`http://localhost:8080/api/candidate/${resume_id}`)
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/candidate/${resume_id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Candidate not found");
         return res.json();
