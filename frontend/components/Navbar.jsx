@@ -11,14 +11,10 @@ function Navbar() {
   const route = useRouter()
 
 const handleLogout = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/logout`, {
-    method: "POST",               
-    credentials: "include",       
-  });
 
-  if (res.ok) {
-    route.replace("/login");
-  }
+  localStorage.removeItem("token")
+  route.replace("/login");
+
 };
   return (
     <nav className="sticky top-0 z-50 bg-white border-b">

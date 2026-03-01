@@ -18,6 +18,11 @@ def create_app():
         ],
     )
 
+
+    @app.route("/api/<path:path>", methods=["OPTIONS"])
+    def options_handler(path):
+        return "", 200
+
     jwt.init_app(app)
     socketio.init_app(app)
 

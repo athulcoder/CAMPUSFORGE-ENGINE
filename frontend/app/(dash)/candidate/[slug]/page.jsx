@@ -27,8 +27,13 @@ export default function CandidateProfilePage() {
     console.log("Fetching resume:", resume_id);
 
     setLoading(true);
+    const token = localStorage.getItem('token')
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/candidate/${resume_id}`,{
+      headers:{
+      Authorization: `Bearer ${token}`, 
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/candidate/${resume_id}`)
+      }
+    })
       .then((res) => {
         if (!res.ok) throw new Error("Candidate not found");
         return res.json();

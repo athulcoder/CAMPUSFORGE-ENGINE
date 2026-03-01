@@ -50,7 +50,7 @@ const JOB_ROLE = [
   "Engineering Manager",
 ];
 const STATUS_FILTER = ["PENDING", "ACCEPTED", "REJECTED"];
-/* ---------------- COMPONENT ---------------- */
+
 
 export default function CandidatesPage() {
   const [candidates, setCandidates] = useState([]);
@@ -67,7 +67,9 @@ export default function CandidatesPage() {
 
   const [selectedStatus, setSelectedStatus] = useState("PENDING");
   const [statusOpen, setStatusOpen] = useState(false);
-  /* ---------- FETCH CANDIDATES ---------- */
+ 
+  
+  //fetch candidates
   useEffect(() => {
    const fetchCandidates = async () => {
       setLoading(true);
@@ -79,9 +81,14 @@ export default function CandidatesPage() {
 
         params.append("status", selectedStatus);
 
+        const token = localStorage.getItem('token')
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/candidate?${params.toString()}`,
-          { credentials: "include" }
+          {
+            headers:{
+            Authorization: `Bearer ${token}`, 
+            }
+          }
         );
 
         const data = await res.json();
@@ -107,14 +114,19 @@ const submitReview = async () => {
 
   setActionLoading(true);
 
+
   try {
+    const token = localStorage.getItem('token')
     await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/resume/${actionState.id}/${actionState.type === "accept" ? "approve" : "reject"}`,
       {
         method: "POST",
-        credentials: "include", // IMPORTANT (session cookie)
         headers: {
           "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, 
+
+            
+   
         },
         body: JSON.stringify({
           review_note: actionState.note,

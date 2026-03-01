@@ -1,17 +1,30 @@
-import Navbar from '@/components/Navbar'
-import { AuthProvider } from '@/context/AuthContext'
-import React from 'react'
+"use client";
 
-const layout = ({children}) => {
+import Navbar from "@/components/Navbar";
+import { AuthProvider } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+export default function ProtectedLayout({ children }) {
+  const router = useRouter();
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.replace("/login");
+    } else {
+      setReady(true); 
+    }
+  }, [router]);
+
+  if (!ready) return null; 
+
   return (
-    <div>
-      <AuthProvider>
-        <Navbar />
-        {children}
-      </AuthProvider>
-
-        </div>
-  )
+    <AuthProvider>
+      <Navbar />
+      {children}
+    </AuthProvider>
+  );
 }
-
-export default layout

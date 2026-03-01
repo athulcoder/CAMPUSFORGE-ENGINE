@@ -1,6 +1,10 @@
-from flask import Blueprint, request, jsonify, make_response,redirect
+from flask import Blueprint, request, jsonify
 from sqlalchemy.exc import IntegrityError
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import (
+    create_access_token,
+    jwt_required,
+    get_jwt_identity
+)
 
 from backend.db.session import SessionLocal
 from backend.models.recruiter import Recruiter
@@ -8,10 +12,14 @@ from backend.models.recruiter import Recruiter
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 
+# --------------------------------------------------
+# REGISTER
+# --------------------------------------------------
 @auth_bp.post("/register")
 def register():
     data = request.get_json()
 
+    # Validate input
     if not data or not data.get("email") or not data.get("password") or not data.get("name"):
         return jsonify({"error": "All fields are required"}), 400
 
@@ -38,6 +46,7 @@ def register():
     }), 201
 
 
+
 @auth_bp.post("/login")
 def login():
     data = request.get_json()
@@ -47,37 +56,33 @@ def login():
 
     db = SessionLocal()
 
-    recruiter = db.query(Recruiter)\
-        .filter(Recruiter.email == data["email"])\
+    recruiter = (
+        db.query(Recruiter)
+        .filter(Recruiter.email == data["email"])
         .first()
+    )
 
     if not recruiter or not recruiter.check_password(data["password"]):
         db.close()
-        return jsonify({"success": False, "error": "Invalid email or password"}), 401
+        return jsonify({"error": "Invalid email or password"}), 401
 
+    # 🔐 Create JWT
     access_token = create_access_token(identity=recruiter.id)
 
-    response = make_response(jsonify({
-        "success": True,
-        "message": "Login successful",
-        "recruiter": recruiter.get_recruiter()
-    }))
-
-    response.set_cookie(
-        "sessionId",
-        access_token,
-        httponly=True,
-        secure=True,       
-        samesite="None",
-        max_age=60 * 60 * 24 * 7
-    )
-
     db.close()
-    return response, 200
+
+
+    return jsonify({
+        "message":"Login was successful",
+        "success": True,
+        "access_token": access_token,     
+        "recruiter": recruiter.get_recruiter()
+    }), 200
+
 
 
 @auth_bp.get("/me")
-@jwt_required()
+@jwt_required()  
 def me():
     recruiter_id = get_jwt_identity()
 
@@ -93,19 +98,8 @@ def me():
     }), 200
 
 
-@auth_bp.route("/logout", methods=['GET','POST'])
+
+@auth_bp.post("/logout")
 def logout():
-    response = make_response("Logout was successful", 200)
-
-    response.set_cookie(
-        "sessionId",
-        "",
-        httponly=True,
-        secure=True,    
-        expires=0,
-        samesite="None",
-        max_age=0,
-        path='/'
-    )
-
-    return response
+    
+    return jsonify({"success": True, "message": "Logged out"}), 200

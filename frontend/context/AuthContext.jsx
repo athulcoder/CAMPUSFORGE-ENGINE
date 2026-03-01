@@ -10,11 +10,15 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let mounted = true;
-
     async function fetchUser() {
       try {
+        const token = localStorage.getItem('token')
+
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/recruiter/me`, {
-          credentials: "include",
+          headers:{
+            Authorization: `Bearer ${token}`, 
+
+          }
         });
 
         if (!res.ok) {
