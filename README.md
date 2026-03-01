@@ -61,6 +61,7 @@ NEXT_PUBLIC_BASE_URL = http://localhost:8080
 ```
 
 ```bash
+npm install
 npm run build
 npm start
 ```
