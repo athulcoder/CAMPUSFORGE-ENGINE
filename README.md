@@ -52,6 +52,14 @@ docker compose up --build
 #### frontend 
 ```bash
 cd frontend
+```
+Create a .env file there 
+copy paste this
+```
+NEXT_PUBLIC_BASE_URL = http://localhost:8080
+```
+
+```bash
 npm run build
 npm start
 ```
