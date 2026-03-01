@@ -41,6 +41,9 @@ services:
         condition: service_healthy
     command: python -m backend.resume_worker.worker
     restart: always
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     networks:
       - campusforge
 
