@@ -1,12 +1,6 @@
 version: "3.9"
 
 services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
   backend:
     build:
       context: .
@@ -21,9 +15,7 @@ services:
         condition: service_healthy
       minio:
         condition: service_healthy
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
+
     networks:
       - campusforge
 
@@ -41,9 +33,6 @@ services:
         condition: service_healthy
     command: python -m backend.resume_worker.worker
     restart: always
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
     networks:
       - campusforge
 
