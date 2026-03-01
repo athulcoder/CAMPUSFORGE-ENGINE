@@ -2,7 +2,7 @@
 
 
 ### ER - DIAGRAM
-![alt text](docs/ER_diagram_CampusForge-Engine.png)
+![alt text](docs/er-diagram.png)
 
 
 
