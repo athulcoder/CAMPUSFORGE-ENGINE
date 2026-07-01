@@ -3,11 +3,6 @@ import "./globals.css";
 import { ToastProvider } from "@/components/ToastProvider";
 
 
-
-
-
-
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
