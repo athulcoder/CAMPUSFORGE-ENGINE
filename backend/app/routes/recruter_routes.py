@@ -14,7 +14,7 @@ recruiter_bp = Blueprint(
 def health():
     return jsonify({
         "scuccess":"HEALTH IS GOOD , server is properly working bro "
-    })
+    })      
 @recruiter_bp.get("/me")
 @jwt_required()
 def get_my_profile():
