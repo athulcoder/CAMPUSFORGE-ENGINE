@@ -1,50 +1,50 @@
-FROM python:3.11-slim
+    FROM python:3.11-slim
 
-# -----------------------------
-# Environment
-# -----------------------------
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV FLASK_ENV=production
+    # -----------------------------
+    # Environment
+    # -----------------------------
+    ENV PYTHONDONTWRITEBYTECODE=1
+    ENV PYTHONUNBUFFERED=1
+    ENV FLASK_ENV=production
 
-# IMPORTANT: make /app importable
-ENV PYTHONPATH=/app
+    # IMPORTANT: make /app importable
+    ENV PYTHONPATH=/app
 
-WORKDIR /app
+    WORKDIR /app
 
-# -----------------------------
-# System dependencies
-# -----------------------------
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    g++ \
-    build-essential \
-    libpq-dev \
-    poppler-utils \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-# -----------------------------
-# Python dependencies
-# -----------------------------
-COPY backend/requirements.txt .
-RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+    # -----------------------------
+    # System dependencies
+    # -----------------------------
+    RUN apt-get update && apt-get install -y --no-install-recommends \
+        gcc \
+        g++ \
+        build-essential \
+        libpq-dev \
+        poppler-utils \
+        curl \
+        && rm -rf /var/lib/apt/lists/*
+    # -----------------------------
+    # Python dependencies
+    # -----------------------------
+    COPY backend/requirements.txt .
+    RUN pip install --upgrade pip \
+        && pip install --no-cache-dir -r requirements.txt
 
-# -----------------------------
-# Application code
-# -----------------------------
-COPY backend backend
-# -----------------------------
-# Security: non-root user
-# -----------------------------
-RUN useradd -m appuser \
-    && chown -R appuser:appuser /app
+    # -----------------------------
+    # Application code
+    # -----------------------------
+    COPY backend backend
+    # -----------------------------
+    # Security: non-root user
+    # -----------------------------
+    RUN useradd -m appuser \
+        && chown -R appuser:appuser /app
 
-USER appuser
+    USER appuser
 
-# -----------------------------
-# Runtime
-# -----------------------------
-EXPOSE 5000
+    # -----------------------------
+    # Runtime
+    # -----------------------------
+    EXPOSE 5000
 
-CMD ["gunicorn","-k","geventwebsocket.gunicorn.workers.GeventWebSocketWorker","-w","1","-b","0.0.0.0:5000","backend.run:app"]
+    CMD ["gunicorn","-k","geventwebsocket.gunicorn.workers.GeventWebSocketWorker","-w","1","-b","0.0.0.0:5000","backend.run:app"]
