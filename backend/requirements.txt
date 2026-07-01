@@ -18,3 +18,7 @@ python-dotenv
 scikit-learn
 flask-socketio
 eventlet
+
+Flask-SocketIO
+gevent
+gevent-websocket
