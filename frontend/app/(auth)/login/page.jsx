@@ -43,7 +43,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-gray-50 to-gray-100">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg animate-fadeIn">
         <h1 className="mb-1 text-center text-2xl font-semibold tracking-tight">
-          Campus Forge Engine
+          Campus Forge Engine System
         </h1>
         <p className="mb-6 text-center text-sm text-gray-500">
           Recruiter Login
