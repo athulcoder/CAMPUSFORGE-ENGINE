@@ -13,6 +13,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
+
 export const metadata = {
   title: "Campus Forge Engine  ",
   description: "campusforge engine | resume uploading and calculating the score of each resume and match the resume for exsiting job roles",
