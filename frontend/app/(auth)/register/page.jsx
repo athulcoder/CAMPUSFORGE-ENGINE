@@ -43,122 +43,115 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden p-4 sm:p-6 lg:p-10">
-      {/* Alpine Mountain Background Image (Fixed) */}
+    <div className="relative flex min-h-screen lg:h-screen w-full lg:w-screen items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto lg:overflow-hidden">
+      {/* Alpine Background */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 scale-105"
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700 scale-105"
         style={{ backgroundImage: `url('/images/auth-bg-2.jpg')` }}
       />
+      
+      {/* Dynamic Gradient Overlay with Ambient Glow */}
+      <div className="fixed inset-0 bg-gradient-to-t from-slate-950/90 via-purple-950/40 to-slate-950/80 backdrop-blur-[3px]" />
+      
+      {/* Ambient Glow Orbs */}
+      <div className="pointer-events-none fixed top-10 left-1/2 -translate-x-1/2 lg:top-12 lg:left-20 h-64 w-64 lg:h-96 lg:w-96 rounded-full bg-purple-600/30 blur-[100px]" />
+      <div className="pointer-events-none fixed bottom-10 right-10 h-64 w-64 lg:h-96 lg:w-96 rounded-full bg-cyan-500/20 blur-[100px]" />
 
-      {/* Dark Cyber-Purple Vignette & Blur Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/90 via-purple-950/65 to-slate-950/85 backdrop-blur-[3px]" />
-
-      {/* Ambient Neural Glow Blobs */}
-      <div className="pointer-events-none absolute -top-32 -left-32 h-[30rem] w-[30rem] rounded-full bg-purple-600/25 blur-[120px]" />
-      <div className="pointer-events-none absolute -bottom-32 -right-32 h-[30rem] w-[30rem] rounded-full bg-cyan-500/20 blur-[120px]" />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[40rem] w-[40rem] rounded-full bg-violet-600/10 blur-[140px]" />
-
-      {/* Premium Split Glass Card */}
-      <div className="ai-glass-card relative z-10 w-full max-w-5xl rounded-3xl overflow-hidden shadow-[0_0_80px_rgba(147,51,234,0.25)] animate-fadeIn grid grid-cols-1 lg:grid-cols-12 border border-purple-500/25">
+      {/* Main Glass Card Container */}
+      <div className="apple-glass-card relative z-10 w-full max-w-md lg:max-w-4xl max-h-none lg:max-h-[620px] rounded-3xl overflow-hidden animate-fadeIn grid grid-cols-1 lg:grid-cols-12 border border-white/20 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]">
         
-        {/* Left Column: AI Hero Vector & Visual Section (7 cols) */}
-        <div className="relative flex flex-col justify-between p-8 sm:p-10 lg:p-12 lg:col-span-7 bg-gradient-to-b from-purple-950/40 to-slate-950/60 border-b lg:border-b-0 lg:border-r border-purple-500/15 overflow-hidden">
-          
-          {/* Subtle Grid Pattern Overlay */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
-
-          {/* Top Brand Header */}
-          <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 rounded-full bg-cyan-500/15 px-3.5 py-1.5 text-xs font-semibold text-cyan-300 border border-cyan-400/30 backdrop-blur-md shadow-sm mb-4">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
-              </span>
-              RECRUITER ONBOARDING
+        {/* Left Hero Panel (Desktop only: 7 cols) */}
+        <div className="hidden lg:flex lg:col-span-7 flex-col justify-between p-8 xl:p-10 bg-slate-950/40 border-r border-white/10 overflow-hidden">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1 text-xs font-medium text-slate-200 border border-white/15 backdrop-blur-md mb-4">
+              <span>Campus Forge Engine</span>
+              <span className="text-slate-500">•</span>
+              <span className="text-purple-300">Recruiter Onboarding</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
-              Join Campus Forge <br className="hidden sm:inline" />
-              <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent">
-                AI Talent Intelligence
+            <h1 className="text-3xl xl:text-4xl font-semibold tracking-tight text-white leading-tight">
+              Create your <br />
+              <span className="bg-gradient-to-r from-purple-200 via-pink-200 to-cyan-200 bg-clip-text text-transparent font-normal">
+                Recruiter Account.
               </span>
             </h1>
 
-            <p className="mt-3 text-sm text-slate-300 max-w-lg leading-relaxed">
-              Create your account to unlock automated candidate extraction, high-precision resume scoring, and seamless job role matching.
+            <p className="mt-2.5 text-xs text-slate-300 max-w-sm leading-relaxed">
+              Start parsing candidate profiles, calculating resume metrics, and accelerating recruitment.
             </p>
           </div>
 
-          {/* Center AI Vector Illustration */}
-          <div className="relative z-10 my-8 sm:my-10 flex flex-col items-center justify-center">
-            <div className="relative w-full max-w-sm sm:max-w-md aspect-square rounded-2xl overflow-hidden p-2 bg-gradient-to-b from-purple-500/20 via-transparent to-cyan-500/20 border border-purple-500/30 shadow-2xl shadow-purple-950/80 animate-float">
+          {/* Product Graphic Display */}
+          <div className="my-4 flex justify-center">
+            <div className="relative w-full max-w-xs rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-slate-900/60 p-2">
               <Image
                 src="/images/ai-illustration.png"
-                alt="Campus Forge AI Engine"
-                width={500}
-                height={500}
-                className="w-full h-full object-cover rounded-xl shadow-inner"
+                alt="Campus Forge Engine"
+                width={400}
+                height={400}
+                className="w-full h-auto max-h-44 object-cover rounded-xl"
                 priority
               />
-              
-              {/* Floating Overlay Badge 1 */}
-              <div className="absolute top-4 left-4 z-20 flex items-center gap-2 rounded-xl bg-slate-900/80 backdrop-blur-md px-3 py-2 border border-purple-500/30 text-xs font-medium text-white shadow-xl">
-                <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-purple-500/20 text-purple-300">
-                  ★
-                </div>
-                <div>
-                  <div className="text-[10px] text-slate-400 uppercase tracking-wider">Talent Pipeline</div>
-                  <div className="font-bold text-purple-300">Instant AI Job Match</div>
-                </div>
-              </div>
-
-              {/* Floating Overlay Badge 2 */}
-              <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2 rounded-xl bg-slate-900/80 backdrop-blur-md px-3 py-2 border border-cyan-500/30 text-xs font-medium text-white shadow-xl">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-emerald-300 font-semibold">Ready for Recruiter Setup</span>
-              </div>
             </div>
           </div>
 
-          {/* Bottom Feature Badges */}
-          <div className="relative z-10 grid grid-cols-3 gap-3 pt-4 border-t border-purple-500/15">
-            <div className="flex flex-col items-center text-center">
-              <span className="text-base font-bold text-purple-300">Fast Setup</span>
-              <span className="text-[11px] text-slate-400">Under 1 Minute</span>
+          {/* Stat Strip */}
+          <div className="grid grid-cols-3 gap-2 pt-4 border-t border-white/10 text-[11px] text-slate-400">
+            <div>
+              <div className="font-semibold text-white">Quick Setup</div>
+              <div>Under 1 Minute</div>
             </div>
-            <div className="flex flex-col items-center text-center border-x border-purple-500/15">
-              <span className="text-base font-bold text-cyan-300">Smart AI</span>
-              <span className="text-[11px] text-slate-400">Automatic Extraction</span>
+            <div className="border-x border-white/10 px-1 text-center">
+              <div className="font-semibold text-white">Automated</div>
+              <div>Candidate Score</div>
             </div>
-            <div className="flex flex-col items-center text-center">
-              <span className="text-base font-bold text-pink-300">Unlimited</span>
-              <span className="text-[11px] text-slate-400">Resume Uploads</span>
+            <div className="text-right">
+              <div className="font-semibold text-white">Enterprise</div>
+              <div>Security</div>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Premium AI Register Form (5 cols) */}
-        <div className="relative flex flex-col justify-center p-8 sm:p-10 lg:p-12 lg:col-span-5 bg-slate-950/80 backdrop-blur-xl">
+        {/* Right Form Panel (Full width on mobile, 5 cols on desktop) */}
+        <div className="col-span-1 lg:col-span-5 flex flex-col justify-center p-6 sm:p-8 xl:p-9 bg-slate-950/75 backdrop-blur-2xl">
           
-          {/* Logo Badge */}
-          <div className="flex flex-col items-center text-center mb-5">
-            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 shadow-lg shadow-purple-500/30 ring-1 ring-white/20">
-              <svg className="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-              </svg>
+          {/* Mobile & Header Title Section */}
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left mb-5">
+            
+            {/* Mobile Graphic Badge (Visible on mobile/tablet) */}
+            <div className="lg:hidden mb-3.5 relative">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border border-white/25 shadow-2xl bg-slate-900/80 p-1.5 overflow-hidden">
+                <Image
+                  src="/images/ai-illustration.png"
+                  alt="Campus Forge Engine"
+                  width={200}
+                  height={200}
+                  className="w-full h-full object-cover rounded-xl"
+                />
+              </div>
+              <div className="absolute -bottom-2 -right-2 bg-purple-600 text-white p-1.5 rounded-xl shadow-lg border border-white/20">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+              </div>
             </div>
-            <h2 className="text-2xl font-bold tracking-tight text-white">
-              Create AI Account
+
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-purple-500/15 px-3 py-1 text-[11px] font-medium text-purple-300 border border-purple-500/30 mb-1.5">
+              Recruiter Registration
+            </div>
+
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+              Create Account
             </h2>
-            <p className="mt-1 text-xs text-slate-400">
-              Fill in your details to start candidate matching
+            <p className="mt-0.5 text-xs text-slate-300">
+              Register your recruiter workspace
             </p>
           </div>
 
           {/* Error Alert */}
           {error && (
-            <div className="mb-4 flex items-center gap-3 rounded-xl bg-rose-500/15 p-3.5 text-xs text-rose-200 border border-rose-500/30 animate-shake">
-              <svg className="h-4 w-4 shrink-0 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="mb-3.5 flex items-center gap-2.5 rounded-xl bg-red-500/15 p-2.5 text-xs text-red-200 border border-red-500/30 animate-shake">
+              <svg className="h-4 w-4 shrink-0 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
               <span>{error}</span>
@@ -166,10 +159,10 @@ export default function RegisterPage() {
           )}
 
           {/* Form */}
-          <form onSubmit={handleRegister} className="space-y-3.5">
+          <form onSubmit={handleRegister} className="space-y-3">
             {/* Full Name */}
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-slate-300 mb-1">
                 Full Name
               </label>
               <div className="relative">
@@ -181,16 +174,16 @@ export default function RegisterPage() {
                 <input
                   type="text"
                   placeholder="John Doe"
-                  className="ai-glass-input w-full rounded-xl py-2.5 pr-4 pl-10 text-xs sm:text-sm text-white placeholder-slate-500 outline-none"
+                  className="apple-glass-input w-full rounded-xl py-2.5 pr-4 pl-10 text-xs sm:text-sm text-white placeholder-slate-500 outline-none"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
             </div>
 
-            {/* Email Address */}
+            {/* Work Email */}
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-slate-300 mb-1">
                 Work Email
               </label>
               <div className="relative">
@@ -201,8 +194,8 @@ export default function RegisterPage() {
                 </div>
                 <input
                   type="email"
-                  placeholder="recruiter@company.com"
-                  className="ai-glass-input w-full rounded-xl py-2.5 pr-4 pl-10 text-xs sm:text-sm text-white placeholder-slate-500 outline-none"
+                  placeholder="name@company.com"
+                  className="apple-glass-input w-full rounded-xl py-2.5 pr-4 pl-10 text-xs sm:text-sm text-white placeholder-slate-500 outline-none"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -211,7 +204,7 @@ export default function RegisterPage() {
 
             {/* Password */}
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-slate-300 mb-1">
                 Password
               </label>
               <div className="relative">
@@ -223,7 +216,7 @@ export default function RegisterPage() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  className="ai-glass-input w-full rounded-xl py-2.5 pr-10 pl-10 text-xs sm:text-sm text-white placeholder-slate-500 outline-none"
+                  className="apple-glass-input w-full rounded-xl py-2.5 pr-10 pl-10 text-xs sm:text-sm text-white placeholder-slate-500 outline-none"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -255,47 +248,40 @@ export default function RegisterPage() {
                   type="checkbox"
                   checked={showPassword}
                   onChange={() => setShowPassword(!showPassword)}
-                  className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-purple-500 focus:ring-purple-500/40 focus:ring-offset-0 accent-purple-500 transition cursor-pointer"
+                  className="h-4 w-4 rounded border-white/20 bg-slate-900 text-purple-500 focus:ring-0 accent-purple-500 transition cursor-pointer"
                 />
                 <span className="group-hover:text-white text-xs transition-colors">Show password</span>
               </label>
             </div>
 
-            {/* AI Action Submit Button */}
+            {/* Premium Button */}
             <button
               type="submit"
               disabled={loading}
-              className={`w-full rounded-xl py-3.5 text-xs sm:text-sm font-semibold text-white shadow-xl transition-all duration-300 cursor-pointer ${
-                loading
-                  ? "bg-purple-700/60 cursor-not-allowed scale-[0.99]"
-                  : "bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-purple-600/30 hover:shadow-purple-500/50 active:scale-[0.98]"
+              className={`w-full rounded-xl py-3 text-xs sm:text-sm font-semibold text-slate-950 bg-gradient-to-r from-slate-100 via-white to-slate-100 hover:from-white hover:to-white shadow-xl hover:shadow-white/20 active:scale-[0.98] transition-all duration-200 cursor-pointer ${
+                loading ? "opacity-75 cursor-not-allowed" : ""
               }`}
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-950 border-t-transparent" />
                   Creating account...
                 </span>
               ) : (
-                <span className="flex items-center justify-center gap-2">
-                  <span>Register & Launch Dashboard</span>
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </span>
+                "Create Account"
               )}
             </button>
           </form>
 
           {/* Footer Navigation Link */}
-          <div className="mt-5 text-center border-t border-purple-500/15 pt-4">
+          <div className="mt-4 text-center border-t border-white/10 pt-3">
             <p className="text-xs text-slate-400">
               Already have an account?{" "}
               <Link
                 href="/login"
-                className="font-semibold text-purple-400 hover:text-purple-300 hover:underline transition-colors"
+                className="font-semibold text-purple-300 hover:text-purple-200 hover:underline transition-colors"
               >
-                Log in to Dashboard
+                Sign In
               </Link>
             </p>
           </div>
