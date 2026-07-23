@@ -48,17 +48,17 @@ export default function LoginPage() {
         className="fixed inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700 scale-105"
         style={{ backgroundImage: `url('/images/auth-bg-2.jpg')` }}
       />
-      
+
       {/* Dynamic Gradient Overlay with Ambient Glow */}
       <div className="fixed inset-0 bg-gradient-to-t from-slate-950/90 via-purple-950/40 to-slate-950/80 backdrop-blur-[3px]" />
-      
+
       {/* Ambient Glow Orbs */}
       <div className="pointer-events-none fixed top-10 left-1/2 -translate-x-1/2 lg:top-12 lg:left-20 h-64 w-64 lg:h-96 lg:w-96 rounded-full bg-purple-600/30 blur-[100px]" />
       <div className="pointer-events-none fixed bottom-10 right-10 h-64 w-64 lg:h-96 lg:w-96 rounded-full bg-cyan-500/20 blur-[100px]" />
 
       {/* Main Glass Card Container */}
       <div className="apple-glass-card relative z-10 w-full max-w-md lg:max-w-4xl max-h-none lg:max-h-[620px] rounded-3xl overflow-hidden animate-fadeIn grid grid-cols-1 lg:grid-cols-12 border border-white/20 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]">
-        
+
         {/* Left Hero Panel (Desktop only: 7 cols) */}
         <div className="hidden lg:flex lg:col-span-7 flex-col justify-between p-8 xl:p-10 bg-slate-950/40 border-r border-white/10 overflow-hidden">
           <div>
@@ -113,10 +113,10 @@ export default function LoginPage() {
 
         {/* Right Form Panel (Full width on mobile, 5 cols on desktop) */}
         <div className="col-span-1 lg:col-span-5 flex flex-col justify-center p-6 sm:p-8 xl:p-9 bg-slate-950/75 backdrop-blur-2xl">
-          
+
           {/* Mobile & Header Title Section */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left mb-6">
-            
+
             {/* Mobile Graphic Badge (Visible on mobile/tablet) */}
             <div className="lg:hidden mb-4 relative">
               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border border-white/25 shadow-2xl bg-slate-900/80 p-1.5 overflow-hidden">
@@ -219,26 +219,14 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Checkbox Options */}
-            <div className="flex items-center justify-between text-xs text-slate-300 pt-0.5">
-              <label className="flex items-center gap-2 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={showPassword}
-                  onChange={() => setShowPassword(!showPassword)}
-                  className="h-4 w-4 rounded border-white/20 bg-slate-900 text-purple-500 focus:ring-0 accent-purple-500 transition cursor-pointer"
-                />
-                <span className="group-hover:text-white text-xs transition-colors">Show password</span>
-              </label>
-            </div>
+
 
             {/* Premium Button */}
             <button
               type="submit"
               disabled={loading}
-              className={`w-full rounded-xl py-3.5 text-xs sm:text-sm font-semibold text-slate-950 bg-gradient-to-r from-slate-100 via-white to-slate-100 hover:from-white hover:to-white shadow-xl hover:shadow-white/20 active:scale-[0.98] transition-all duration-200 cursor-pointer ${
-                loading ? "opacity-75 cursor-not-allowed" : ""
-              }`}
+              className={`w-full rounded-xl py-3.5 text-xs sm:text-sm font-semibold text-slate-950 bg-gradient-to-r from-slate-100 via-white to-slate-100 hover:from-white hover:to-white shadow-xl hover:shadow-white/20 active:scale-[0.98] transition-all duration-200 cursor-pointer ${loading ? "opacity-75 cursor-not-allowed" : ""
+                }`}
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

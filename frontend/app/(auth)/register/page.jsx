@@ -241,18 +241,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Checkbox Options */}
-            <div className="flex items-center justify-between text-xs text-slate-300 pt-0.5">
-              <label className="flex items-center gap-2 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={showPassword}
-                  onChange={() => setShowPassword(!showPassword)}
-                  className="h-4 w-4 rounded border-white/20 bg-slate-900 text-purple-500 focus:ring-0 accent-purple-500 transition cursor-pointer"
-                />
-                <span className="group-hover:text-white text-xs transition-colors">Show password</span>
-              </label>
-            </div>
 
             {/* Premium Button */}
             <button
